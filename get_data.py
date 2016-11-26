@@ -4,29 +4,31 @@ client = MongoClient('mongodb://localhost:27017')
 db = client.group
 collection = db.new_recipes
 start=[];
-for i in range(16,1565):
-    start.append(i*1000)
+timeout=10.0
+for i in range(410,2000):
+    start.append(i*1000+1)
 print(start)
 
 #insert data into mongodb
 def insert_data(js):
-    for recipe in js:
-        p=0
-        for i in collection.find():
-            if i["id"]==recipe['id']:
-                p=1;
-            else:
-                pass
-        if(p==0):
-            collection.insert_one(recipe)
-        else:
-            print (recipe['recipeName'],"has been inserted")
-
+        collection.insert(js)
+        
 #collect data
-for i in start:
-    r=requests.get('http://api.yummly.com/v1/api/recipes?_app_id=44f270fb&_app_key=c5810cbfb615798aca16bdc80dec7f3a&&maxResult=1000&&start='+str(i), headers={'Accept-Encoding': ''})
-    N=0
-    recipes=[]
-    if "matches" in r.json():
-        recipes=r.json()["matches"]
-    insert_data(recipes)
+def function_collect(start):
+    for i in start:
+        r=requests.get('http://api.yummly.com/v1/api/recipes?_app_id=44f270fb&_app_key=c5810cbfb615798aca16bdc80dec7f3a&&maxResult=500&&start='+str(i), headers={'Accept-Encoding': ''},timeout=None)
+        print(r.status_code);
+        print (int(i) - 1) / 1000
+        if r.status_code==408:
+            print "sss"
+            start1 = []
+            for i in range((int(i) - 1) / 1000, 1565):
+                start1.append(i * 1000 + 1)
+            function_collect(start1)
+        else:
+            N=0
+            recipes=[]
+            if r.json():
+                recipes=r.json()["matches"]
+            insert_data(recipes)
+function_collect(start)
