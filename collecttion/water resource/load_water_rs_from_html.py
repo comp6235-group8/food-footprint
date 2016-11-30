@@ -61,6 +61,7 @@ for row in dataset0:
 #####################################################33
 ### Store to MongoDB
 client = MongoClient()
-db = client.waterfp
+#db = client.waterfp
+db = client["water_footprint"]
 collection = db.tot_renew_water
 collection.insert(dataset)
