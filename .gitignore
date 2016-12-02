@@ -105,3 +105,5 @@ ENV/
 
 # DATA FOLDER
 data/
+frontend/.idea/
+frontend/node_modules/
