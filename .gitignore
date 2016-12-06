@@ -102,6 +102,7 @@ ENV/
 # Projects files
 .project
 .pydevproject
+.settings
 
 # DATA FOLDER
 data/
