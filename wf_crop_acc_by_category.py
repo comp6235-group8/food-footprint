@@ -64,9 +64,6 @@ for doc in collection.find():
 
         for country, wf in current_category_acc["country_acc"].iteritems():
             wf_types = {"blue": None, "green": None, "grey": None}
-            # if current_category_acc["product"] == "Barley":
-            #     print country
-            #     print wf
             for fp_type in ["blue", "green", "grey"]:
                 if wf[fp_type]:
                     wf_types[fp_type] = numpy.mean(wf[fp_type])
@@ -79,7 +76,7 @@ for doc in collection.find():
                     "grey": wf_types["grey"]
                 }
             })
-        # aggregated_result.append(current_category_acc)
+
         aggregated_result.append({
             "product": current_category_acc["product"],
             "global_wf": current_category_acc["global_wf"],
@@ -149,19 +146,12 @@ for doc in collection.find():
                         "grey": wf_types["grey"]
                     }
                 })
-            # aggregated_result.append(current_category_acc)
+
             aggregated_result.append({
                 "product": current_category_acc["product"],
                 "global_wf": current_category_acc["global_wf"],
                 "countries": current_category_acc["countries"]
             })
-
-
-print len(aggregated_result)
-
-# for ingredient in aggregated_result:
-#     print ingredient["product"]
-#     print ingredient["global_wf"]
 
 print aggregated_result[2]["product"]
 for c in aggregated_result[2]["countries"]:
