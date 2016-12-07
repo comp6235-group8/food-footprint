@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "d3": "^4.4.0",
+    "d3": "^3.5.5",
     "http-server": "^0.9.0",
-    "jquery": "^3.1.1"
+    "jquery": "^2.1.3"
   }
 }
