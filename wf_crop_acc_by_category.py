@@ -35,19 +35,19 @@ for doc in collection.find():
             country_name = country["country"]
             if country_name not in current_category_acc["country_acc"]:
                 current_category_acc["country_acc"][country_name] = {"blue": [], "green": [], "grey": []}
-            else:
-                if country["water_footprint_country_average"]["blue"]:
-                    current_category_acc["country_acc"][country_name]["blue"].append(
-                        country["water_footprint_country_average"]["blue"]
-                    )
-                if country["water_footprint_country_average"]["green"]:
-                    current_category_acc["country_acc"][country_name]["green"].append(
-                        country["water_footprint_country_average"]["green"]
-                    )
-                if country["water_footprint_country_average"]["grey"]:
-                    current_category_acc["country_acc"][country_name]["grey"].append(
-                        country["water_footprint_country_average"]["grey"]
-                    )
+
+            if country["water_footprint_country_average"]["blue"]:
+                current_category_acc["country_acc"][country_name]["blue"].append(
+                    country["water_footprint_country_average"]["blue"]
+                )
+            if country["water_footprint_country_average"]["green"]:
+                current_category_acc["country_acc"][country_name]["green"].append(
+                    country["water_footprint_country_average"]["green"]
+                )
+            if country["water_footprint_country_average"]["grey"]:
+                current_category_acc["country_acc"][country_name]["grey"].append(
+                    country["water_footprint_country_average"]["grey"]
+                )
     else:
         if current_category_acc["wf_acc"]["blue"]:
             current_category_acc["global_wf"]["blue"] = numpy.mean(current_category_acc["wf_acc"]["blue"])
@@ -64,6 +64,9 @@ for doc in collection.find():
 
         for country, wf in current_category_acc["country_acc"].iteritems():
             wf_types = {"blue": None, "green": None, "grey": None}
+            # if current_category_acc["product"] == "Barley":
+            #     print country
+            #     print wf
             for fp_type in ["blue", "green", "grey"]:
                 if wf[fp_type]:
                     wf_types[fp_type] = numpy.mean(wf[fp_type])
@@ -76,12 +79,12 @@ for doc in collection.find():
                     "grey": wf_types["grey"]
                 }
             })
-        aggregated_result.append(current_category_acc)
-        # aggregated_result.append({
-        #     "product": current_category_acc["product"],
-        #     "global_wf": current_category_acc["global_wf"],
-        #     "countries": current_category_acc["countries"]
-        # })
+        # aggregated_result.append(current_category_acc)
+        aggregated_result.append({
+            "product": current_category_acc["product"],
+            "global_wf": current_category_acc["global_wf"],
+            "countries": current_category_acc["countries"]
+        })
 
         # Reset the current category object
         current_category = doc["product_category"]
@@ -104,19 +107,18 @@ for doc in collection.find():
             country_name = country["country"]
             if country_name not in current_category_acc["country_acc"]:
                 current_category_acc["country_acc"][country_name] = {"blue": [], "green": [], "grey": []}
-            else:
-                if country["water_footprint_country_average"]["blue"]:
-                    current_category_acc["country_acc"][country_name]["blue"].append(
-                        country["water_footprint_country_average"]["blue"]
-                    )
-                if country["water_footprint_country_average"]["green"]:
-                    current_category_acc["country_acc"][country_name]["green"].append(
-                        country["water_footprint_country_average"]["green"]
-                    )
-                if country["water_footprint_country_average"]["grey"]:
-                    current_category_acc["country_acc"][country_name]["grey"].append(
-                        country["water_footprint_country_average"]["grey"]
-                    )
+            if country["water_footprint_country_average"]["blue"]:
+                current_category_acc["country_acc"][country_name]["blue"].append(
+                    country["water_footprint_country_average"]["blue"]
+                )
+            if country["water_footprint_country_average"]["green"]:
+                current_category_acc["country_acc"][country_name]["green"].append(
+                    country["water_footprint_country_average"]["green"]
+                )
+            if country["water_footprint_country_average"]["grey"]:
+                current_category_acc["country_acc"][country_name]["grey"].append(
+                    country["water_footprint_country_average"]["grey"]
+                )
 
         # Peppermint is our last ingredient so we have to add this to our result manually
         if current_category_acc["product"] == "Peppermint":
@@ -147,11 +149,25 @@ for doc in collection.find():
                         "grey": wf_types["grey"]
                     }
                 })
-            aggregated_result.append(current_category_acc)
+            # aggregated_result.append(current_category_acc)
+            aggregated_result.append({
+                "product": current_category_acc["product"],
+                "global_wf": current_category_acc["global_wf"],
+                "countries": current_category_acc["countries"]
+            })
 
 
 print len(aggregated_result)
 
-for ingredient in aggregated_result:
-    print ingredient["product"]
-    print ingredient["global_wf"]
+# for ingredient in aggregated_result:
+#     print ingredient["product"]
+#     print ingredient["global_wf"]
+
+print aggregated_result[2]["product"]
+for c in aggregated_result[2]["countries"]:
+    print c["country"]
+    print c["wf_country_average"]
+
+collection = db["crop_products_aggregated_by_category"]
+collection.delete_many({})
+collection.insert_many(aggregated_result)
