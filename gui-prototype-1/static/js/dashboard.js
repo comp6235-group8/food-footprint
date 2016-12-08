@@ -1,21 +1,19 @@
 $(document).ready(function() {
-	
-	// Load recipies
-	$.getJSON('/data/recipies', function(data_json) {
-		console.log(data_json.slice(0,10));
-		var data = [];
-		$.each(data_json, function(key, row) {
-			data.push([row]);
-		});
-		console.log(data.slice(0,10));
+    $(".recipe-search").keypress(function (e) {
+        if (e.which == 13) {
+            $.getJSON("/data/recipes/" + $(this).val(), function (recipes) {
+                var data = [];
+                $.each(recipes, function(key, row) {
+                    data.push([row]);
+                });
+                $('#recipe_table').DataTable({
+                    data : data,
+                    columns : [ {title : "Recipe"} ]
+                });
+            });
+        }
+    });
 
-		$('#recipe_table').DataTable({
-			data : data,
-			columns : [ {title : "Recipe"} ]
-		});
-	});
-
-	
 	// Load ingredients
 	$.getJSON('/data/ingredients', function(data_json) {
 		console.log(data_json.slice(0,10));		
