@@ -1,8 +1,5 @@
 $(document).ready(function() {
-    console.log("dom is now ready");
-
     d3.json("http://0.0.0.0:5000/map/ingredient/Wheat", function (error, data) {
-        console.log(data);
 
         var config = {"data0":"country","data1":"wf_country_average",
             "label0":"label 0","label1":"label 1","color0":"#99ccff","color1":"#0050A1",
@@ -103,8 +100,16 @@ $(document).ready(function() {
         }
 
         data.forEach(function(d) {
-            console.log(d[MAP_VALUE]["green"]);
-            valueHash[d[MAP_KEY]] = +d[MAP_VALUE]["green"];
+            valueHash[d[MAP_KEY]] = +d[MAP_VALUE]["green"] + d[MAP_VALUE]["blue"] + d[MAP_VALUE]["grey"];
+        });
+
+        footprintHash = {};
+        data.forEach(function (d) {
+            footprintHash[d[MAP_KEY]] = {
+                "green": +d[MAP_VALUE]["green"],
+                "blue": +d[MAP_VALUE]["blue"],
+                "grey": +d[MAP_VALUE]["grey"]
+            }
         });
 
         var quantize = d3.scale.quantize()
@@ -112,9 +117,9 @@ $(document).ready(function() {
             .range(d3.range(COLOR_COUNTS).map(function(i) { return i }));
 
         quantize.domain([d3.min(data, function(d){
-            return (+d[MAP_VALUE]["green"]) }),
+            return (+d[MAP_VALUE]["green"] + d[MAP_VALUE]["blue"] + d[MAP_VALUE]["grey"]) }),
             d3.max(data, function(d){
-                return (+d[MAP_VALUE]["green"]) })]);
+                return (+d[MAP_VALUE]["green"] + d[MAP_VALUE]["blue"] + d[MAP_VALUE]["grey"]) })]);
 
 
         d3.json("https://s3-us-west-2.amazonaws.com/vida-public/geo/world-topo-min.json", function(error, world) {
@@ -140,8 +145,8 @@ $(document).ready(function() {
                 .attr("id", function(d,i) { return d.id; })
                 .attr("title", function(d) { return d.properties.name; })
                 .style("fill", function(d) {
-                    if (valueHash[d.properties.name]) {
-                        var c = quantize((valueHash[d.properties.name]));
+                    if (valueHash[mapToCountry(d.properties.name)]) {
+                        var c = quantize((valueHash[mapToCountry(d.properties.name)]));
                         var color = colors[c].getColors();
                         return "rgb(" + color.r + "," + color.g +
                             "," + color.b + ")";
@@ -150,16 +155,42 @@ $(document).ready(function() {
                     }
                 })
                 .on("mousemove", function(d) {
+                    // countryOnMap = d.properties.name;
+                    countryOnMap = mapToCountry(d.properties.name);
+
                     var html = "";
 
                     html += "<div class=\"tooltip_kv\">";
                     html += "<span class=\"tooltip_key\">";
-                    html += d.properties.name;
+                    html += countryOnMap;
                     html += "</span>";
                     html += "<span class=\"tooltip_value\">";
-                    html += (valueHash[d.properties.name] ? valueFormat(valueHash[d.properties.name]) : "");
+                    html += "<b>";
+                    html += (valueHash[countryOnMap] ? valueFormat(valueHash[countryOnMap]) : "");
+                    html += "</b>";
                     html += "";
                     html += "</span>";
+                    html += "<div>";
+                    html += "Green footprint: ";
+                    html += "<span class=\"tooltip_value\">";
+                    html += (footprintHash[countryOnMap]["green"] ? valueFormat(footprintHash[countryOnMap]["green"]) : "N/A");
+                    html += "";
+                    html += "</span>";
+                    html += "</div>";
+                    html += "<div>";
+                    html += "Blue footprint: ";
+                    html += "<span class=\"tooltip_value\">";
+                    html += (footprintHash[countryOnMap]["blue"] ? valueFormat(footprintHash[countryOnMap]["blue"]) : "N/A");
+                    html += "";
+                    html += "</span>";
+                    html += "</div>";
+                    html += "<div>";
+                    html += "Grey footprint: ";
+                    html += "<span class=\"tooltip_value\">";
+                    html += (footprintHash[countryOnMap]["grey"] ? valueFormat(footprintHash[countryOnMap]["grey"]) : "N/A");
+                    html += "";
+                    html += "</span>";
+                    html += "</div>";
                     html += "</div>";
 
                     $("#tooltip-container").html(html);
@@ -196,3 +227,17 @@ $(document).ready(function() {
         d3.select(self.frameElement).style("height", (height * 2.3 / 3) + "px");
     });
 });
+
+function mapToCountry (country) {
+    var countryMapper = {
+        "United States": "United States of America",
+        "South Korea": "Korea, Democratic People's Republic of",
+        "Iran": "Iran, Islamic Republic of",
+        "Bolivia, Plurinational State of": "Bolivia",
+        "Venezuela": "Venezuela, Bolivarian Republic of",
+        "Libya": "Libyan Arab Jamahiriya",
+        "Democratic Republic of Congo": "Congo, Democratic Republic of",
+        "Tanzania": "Tanzania, United Republic of"
+    };
+    return countryMapper[country] ? countryMapper[country] : country;
+}
