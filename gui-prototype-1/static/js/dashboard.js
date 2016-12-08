@@ -1,12 +1,19 @@
 $(document).ready(function() {
+    // Initialize table
+    var table = $('#recipe_table').DataTable({
+        data : [],
+        columns : [ {title : "Recipe"} ]
+    });
     $(".recipe-search").keypress(function (e) {
         if (e.which == 13) {
             $.getJSON("/data/recipes/" + $(this).val(), function (recipes) {
+                // Destroy table so we can reload data
+                table.destroy();
                 var data = [];
                 $.each(recipes, function(key, row) {
                     data.push([row]);
                 });
-                $('#recipe_table').DataTable({
+                table = $('#recipe_table').DataTable({
                     data : data,
                     columns : [ {title : "Recipe"} ]
                 });
