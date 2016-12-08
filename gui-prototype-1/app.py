@@ -38,6 +38,17 @@ def data_recipies():
     connection.close()
     return json_resp
 
+@app.route("/data/recipes/<name>")
+def get_recipes_by_name(name):
+    connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
+    collection = connection[DBS_NAME][COLLECTION_RECIPIES]
+
+    recipes = collection.find({"recipeName": {"$regex": u"" + name}}).distinct("recipeName")
+
+    json_resp = json.dumps(recipes)
+    connection.close()
+    return json_resp
+
 @app.route("/data/ingredients")
 def data_ingredients():
     connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
