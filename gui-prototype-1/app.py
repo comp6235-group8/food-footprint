@@ -12,6 +12,7 @@ MONGODB_PORT = 27017
 DBS_NAME = 'water_footprint'
 COLLECTION_RECIPIES = 'recipies'
 COLLECTION_CROP = 'crop_products'
+COLLECTION_CROP_AGGREGATED = 'crop_products_aggregated_by_category'
 #FIELDS = {'school_state': True, 'resource_type': True, 'poverty_level': True, 'date_posted': True, 'total_donations': True, '_id': False}
 
 
@@ -63,6 +64,24 @@ def data_wftest():
     connection.close()
     return json_resp
 
+@app.route("/map/ingredient/<name>")
+def get_ingredient(name):
+    connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
+    collection = connection[DBS_NAME][COLLECTION_CROP_AGGREGATED]
+
+    product = collection.find_one({"product": name})
+    countries = product["countries"]
+
+    json_resp = json.dumps(countries)
+    connection.close()
+    return json_resp
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    response.headers.add('Access-Control-Allow-Methods', 'GET')
+    return response
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',port=5000,debug=True)

@@ -5,12 +5,50 @@
     <title>Water footprint</title>
     <!--<link rel="stylesheet" href="css/styles.css?v=1.0">-->
     <!--<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>-->
-    <script src="node_modules/d3/build/d3.js"></script>
+    <script src="node_modules/d3/d3.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.1.0/topojson.min.js"></script>
     <script src="node_modules/jquery/dist/jquery.js"></script>
 </head>
 <body>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            width: 960px;
+            height: 500px;
+            position: relative;
+        }
+        #canvas {
+        }
+        #canvas-svg {
+        }
+        .land {
+            fill: #222;
+        }
+        .boundary {
+            fill: none;
+            stroke: #fff;
+            stroke-width: 1px;
+        }
+        #tooltip-container {
+            position: absolute;
+            background-color: #fff;
+            color: #000;
+            padding: 10px;
+            border: 1px solid;
+            display: none;
+        }
+        .tooltip_key {
+            font-weight: bold;
+        }
+        .tooltip_value {
+            margin-left: 20px;
+            float: right;
+        }
+    </style>
     Water footprint
     <p class="result"></p>
+    <div id="tooltip-container"></div>
+    <div id="canvas-svg"></div>
     <script src="js/main.js"></script>
 </body>
 </html>
