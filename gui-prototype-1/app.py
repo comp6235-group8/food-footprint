@@ -41,7 +41,7 @@ def data_recipies():
 @app.route("/data/recipes/<name>")
 def get_recipes_by_name(name):
     connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
-    collection = connection[DBS_NAME][COLLECTION_RECIPIES]
+    collection = connection[DBS_NAME][COLLECTION_RECIPES]
 
     recipes = collection.find({"recipeName": {"$regex": u"" + name}}).distinct("recipeName")
 
