@@ -22,3 +22,10 @@
   stroke: #000;
   shape-rendering: crispEdges;
 }
+
+.total-ingredients {
+}
+
+.ingredients-by-recipe {
+    display: none;
+}

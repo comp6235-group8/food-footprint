@@ -107,7 +107,7 @@ def data_ingredients_per_recipe(recipeName):
     collection = connection[DBS_NAME][COLLECTION_RECIPES]
 
     print "Processing:", recipeName
-    recipe = collection.find_one({"recipeName":recipeName})
+    recipe = collection.find_one({"recipeName": recipeName})
 
     ingredients = []
 
