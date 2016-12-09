@@ -10,7 +10,7 @@ COLLECTION_RECIPES = 'recipes'
 COLLECTION_RECIPES_2 = 'recipes_2'
 COLLECTION_CROP = 'crop_products_by_category'
 COLLECTION_ANIMAL = 'animal_products_category'
-COLLECTION_INGREDIENT_TO_WATERFP = 'ingredients_to_recipes'
+COLLECTION_INGREDIENT_TO_WATERFP = 'ingredient_to_waterfootprint'
 
 # Creates a copy of the recipes collection
 # but filtering the recipes that contains ingredients

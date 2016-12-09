@@ -13,7 +13,7 @@ DBS_NAME = 'water_footprint'
 #COLLECTION_RECIPES = 'recipies'
 COLLECTION_RECIPES = 'recipes_2'
 COLLECTION_CROP = 'crop_products_by_category'
-COLLECTION_INGREDIENT_TO_WATERFP = 'ingredients_to_recipes'
+COLLECTION_INGREDIENT_TO_WATERFP = 'ingredient_to_waterfootprint'
 #FIELDS = {'school_state': True, 'resource_type': True, 'poverty_level': True, 'date_posted': True, 'total_donations': True, '_id': False}
 
 
