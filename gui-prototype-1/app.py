@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from bson import json_util
 from bson.json_util import dumps
 import json
+import numpy
 
 app = Flask(__name__)
 
@@ -137,11 +138,28 @@ def data_waterfootprint_per_ingredient(ingredientName):
         if wf:
             waterfootprint = wf
 
-    print "Water footprint:", waterfootprint['water_footprint_global_average']
+    # print "Water footprint:", waterfootprint['water_footprint_global_average']
 
     json_resp = json.dumps(waterfootprint, default=json_util.default)
     connection.close()
     return json_resp
+
+@app.route("/data/recipe/waterfootprint/<ingredients>")
+def recipe_waterfootprint(ingredients):
+    water_footprints_acc = {"blue": [], "green": [], "grey": []}
+    ingredients = ingredients.split(",")
+    for ingredient in ingredients:
+        water_footprint = json.loads(data_waterfootprint_per_ingredient(ingredient))
+        if "water_footprint_global_average" in water_footprint:
+            for footprint_type in ["blue", "green", "grey"]:
+                if water_footprint["water_footprint_global_average"][footprint_type]:
+                    water_footprints_acc[footprint_type].append(water_footprint["water_footprint_global_average"][footprint_type])
+
+    water_footprints = {}
+    for footprint_type in ["blue", "green", "grey"]:
+        water_footprints[footprint_type] = numpy.mean(water_footprints_acc[footprint_type])
+
+    return json.dumps(water_footprints)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',port=5000,debug=True)
