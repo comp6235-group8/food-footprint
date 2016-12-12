@@ -4,3 +4,4 @@ Jinja2
 #Werkzeug==0.10
 #itsdangerous==0.24
 pymongo
+numpy
