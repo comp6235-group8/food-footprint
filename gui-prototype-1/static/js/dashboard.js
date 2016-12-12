@@ -59,7 +59,8 @@ $(document).ready(function() {
                         .on( 'select', function ( e, dt, type, indexes ) {
                             var rowData = ingredientByRecipeTable.rows( indexes ).data().toArray();
                             //events.prepend( '<div><b>'+type+' selection</b> - '+JSON.stringify( rowData )+'</div>' );
-                            console.log(rowData);
+                            ingredient = rowData[0][0];
+                            createMap(ingredient);
                         });
 
                         $.getJSON("/data/recipe/waterfootprint/" + ingredients.join(), function (footprint) {
