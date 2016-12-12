@@ -59,7 +59,7 @@ $(document).ready(function() {
                         .on( 'select', function ( e, dt, type, indexes ) {
                             var rowData = ingredientByRecipeTable.rows( indexes ).data().toArray();
                             //events.prepend( '<div><b>'+type+' selection</b> - '+JSON.stringify( rowData )+'</div>' );
-                            ingredient = rowData[0][0];
+                            var ingredient = rowData[0][0];
                             createMap(ingredient);
                         });
 
@@ -95,7 +95,8 @@ $(document).ready(function() {
         .on( 'select', function ( e, dt, type, indexes ) {
             var rowData = totalIngredientsTable.rows( indexes ).data().toArray();
             //events.prepend( '<div><b>'+type+' selection</b> - '+JSON.stringify( rowData )+'</div>' );
-            console.log(rowData);
+            var ingredient = rowData[0][0];
+            createMap(ingredient);
         } );
 		
 	});
