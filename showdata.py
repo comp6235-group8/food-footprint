@@ -1,11 +1,12 @@
 from pymongo import MongoClient
 import requests
+import re
 import json
 import numpy
 client = MongoClient('mongodb://localhost:27017')
-db = client.group
-collection1 = db.new_recipes
-collection2 = db.ingredients
+db = client.water_footprint
+collection1 = db.water_footprint
+collection2 = db.recipes
 ingredient = []
 import sys;
 reload(sys);
@@ -25,11 +26,15 @@ def fun_ingredient():
 def show_data():
     for i in collection2.find():
         print i
-def fun_translate():
+
+#clean data
+def fun_translate(collection,part):
     result=[""];
-    for i in collection2.find():
-        for j in i['ingredient']:
-            url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q="+j;
+    print collection;
+    for i in collection.find().limit(100):
+            i[part] = re.sub(r"&", "@", i[part])
+        # for j in i[part]:
+            url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q="+i[part];
             header = {
                 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:46.0) Gecko/20100101 Firefox/46.0',
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -37,13 +42,19 @@ def fun_translate():
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
                 }
             r=requests.get(url, headers=header).text
-            array=r.split(',')
-            result.append(array[0][4:-1])
+            array=r.split('",');
+            result_one=array[0][4:]
+            num = re.sub('[!\"\\\]', "", result_one)
+            num = re.sub(r"w/", "", num)
+            num = re.sub(r"@", "&", num)
+            print num
+            collection.update({"_id": i['_id']},{'$set': {"recipeName":num}})
+            result.append(num)
     print result
     return result
 
 def savetxt(filename,x):
     numpy.savetxt(filename,x,fmt='%s',newline='\n')
 
-result=fun_translate()
+result=fun_translate(collection2,"recipeName")
 savetxt("ingredient",result)
