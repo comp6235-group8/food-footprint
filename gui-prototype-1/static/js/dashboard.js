@@ -60,7 +60,11 @@ $(document).ready(function() {
                             var rowData = ingredientByRecipeTable.rows( indexes ).data().toArray();
                             //events.prepend( '<div><b>'+type+' selection</b> - '+JSON.stringify( rowData )+'</div>' );
                             console.log(rowData);
-                        } );
+                        });
+
+                        $.getJSON("/data/recipe/waterfootprint/" + ingredients.join(), function (footprint) {
+                            console.log(footprint);
+                        });
 
                     });
                 });
