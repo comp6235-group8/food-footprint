@@ -2,10 +2,11 @@ var createMap = function (ingredient) {
     $(document).ready(function() {
         d3.json("/data/ingredient/waterfootprint/" + ingredient, function (error, data) {
             if ($.isEmptyObject(data)) {
-                // TO-DO - Somehow display to the user that we have no stats
-                console.log("no water footprint stats");
+                $("#canvas-svg").empty();
+                $("#wf-country-label").html("No water footprint data for " + ingredient);
                 return;
             }
+            $("#wf-country-label").html("Water footprint per country for " + data.product);
 
             data = data.countries;
 
@@ -100,7 +101,6 @@ var createMap = function (ingredient) {
 
             var graticule = d3.geo.graticule();
 
-            // d3.select("#canvas-svg").remove();
             $("#canvas-svg").empty();
 
             var svg = d3.select("#canvas-svg").append("svg")
