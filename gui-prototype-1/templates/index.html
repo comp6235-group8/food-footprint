@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="./static/lib/css/keen-dashboards.css">
 <link rel="stylesheet" href="./static/lib/css/dc.css">
 <link rel="stylesheet" href="./static/css/custom.css">
+<link rel="stylesheet" href="./static/css/map.css">
 <link rel="stylesheet" type="text/css"
 	href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
 <link rel="stylesheet" type="text/css"
@@ -24,6 +25,8 @@
 <script src="./static/lib/js/keen.min.js"></script>
 <!-- <script src='./static/js/graphs.js' type='text/javascript'></script> -->
 <script src='./static/js/dashboard.js' type='text/javascript'></script>
+<script src='./static/js/map.js' type='text/javascript'></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.1.0/topojson.min.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
 </head>
@@ -32,7 +35,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="./">Water foodprint by Recipe and Ingredient</a>
+                <a class="navbar-brand" href="./">Water footprint by Recipe and Ingredient</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-left">
@@ -95,8 +98,13 @@
 	              </div>
 	            </div>
           	</div>
-			
-			
+		</div>
+		<div class="row map">
+			<div class="col-sm-12">
+				<p id="wf-country-label"></p>
+				<div id="tooltip-container"></div>
+				<div id="canvas-svg"></div>
+			</div>
 		</div>
 	</div>
 </body>
