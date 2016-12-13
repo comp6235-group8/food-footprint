@@ -25,7 +25,6 @@ COLLECTION_INGREDIENT_TO_WATERFP = 'ingredient_to_waterfootprint'
 def index():
     return render_template("index.html")
 
-
 @app.route("/data/recipies")
 def data_recipies():
     connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
@@ -62,23 +61,6 @@ def data_ingredients():
     print "Number of distinct ingredients:",len(ingredients)
 
     json_resp = json.dumps(ingredients, default=json_util.default)
-    connection.close()
-    return json_resp
-
-@app.route("/data/wftest")
-def data_wftest():
-    connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
-    collection = connection[DBS_NAME][COLLECTION_CROP]
-
-    example = collection.find_one();
-    wf = example['water_footprint_global_average']
-    list = []
-    for key in wf:
-        list.append({'name': key, 'value': wf[key]})
-
-    print list    
-
-    json_resp = json.dumps(list, default=json_util.default)
     connection.close()
     return json_resp
 
@@ -141,6 +123,46 @@ def data_waterfootprint_per_ingredient(ingredientName):
     # print "Water footprint:", waterfootprint['water_footprint_global_average']
 
     json_resp = json.dumps(waterfootprint, default=json_util.default)
+    connection.close()
+    return json_resp
+
+# Returns the GLOBAL AVERAGE water footprint associated to an ingredient/product
+@app.route("/data/ingredient/globalwaterfootprint/<ingredientName>")
+def data_globalwaterfootprint_per_ingredient(ingredientName):
+    connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
+    collection = connection[DBS_NAME][COLLECTION_INGREDIENT_TO_WATERFP]
+    collection2 = connection[DBS_NAME][COLLECTION_CROP]
+
+    print "Processing:", ingredientName
+    ing_wf = collection.find_one({"ingredient":ingredientName})
+
+    waterfootprint = {}
+
+    if ing_wf:
+        wf = collection2.find_one({"product_category":ing_wf['product_category'], "product":ing_wf["product"]})
+        if wf:
+            waterfootprint = wf['water_footprint_global_average']
+
+    # print "Water footprint:", waterfootprint['water_footprint_global_average']
+
+    json_resp = json.dumps(waterfootprint, default=json_util.default)
+    connection.close()
+    return json_resp
+
+@app.route("/data/wftest")
+def data_wftest():
+    connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
+    collection = connection[DBS_NAME][COLLECTION_CROP]
+
+    example = collection.find_one();
+    wf = example['water_footprint_global_average']
+    #list = []
+    #for key in wf:
+    #    list.append({'name': key, 'value': wf[key]})
+
+    #print list    
+
+    json_resp = json.dumps(wf, default=json_util.default)
     connection.close()
     return json_resp
 

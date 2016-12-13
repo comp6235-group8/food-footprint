@@ -1,0 +1,25 @@
+var data1 = [
+    5,
+    20,
+    55
+]
+
+var data2 = [
+    35,
+    80,
+    35,
+    90,
+    19,
+    39,
+    99
+]
+
+function random(n)
+{
+    val = []
+    for(i = 0; i < n; i++)
+    {
+        val.push(Math.random() * 100)
+    }
+    return val
+}
