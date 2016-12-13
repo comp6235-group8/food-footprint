@@ -60,8 +60,8 @@ $(document).ready(function() {
                             var rowData = ingredientByRecipeTable.rows( indexes ).data().toArray();
                             //events.prepend( '<div><b>'+type+' selection</b> - '+JSON.stringify( rowData )+'</div>' );
                             var ingredient = rowData[0][0];
-                            createMap(ingredient);
                             queryGwfAndUpdateBarChart(ingredient);
+                            createMap(ingredient);
                         });
 
                         $.getJSON("/data/recipe/waterfootprint/" + ingredients.join(), function (footprint) {
@@ -97,8 +97,8 @@ $(document).ready(function() {
             var rowData = totalIngredientsTable.rows( indexes ).data().toArray();
             //events.prepend( '<div><b>'+type+' selection</b> - '+JSON.stringify( rowData )+'</div>' );
             var ingredient = rowData[0][0];
-            createMap(ingredient);
             queryGwfAndUpdateBarChart(ingredient);
+            createMap(ingredient);
         } );
 		
 	});
