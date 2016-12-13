@@ -25,7 +25,6 @@ COLLECTION_INGREDIENT_TO_WATERFP = 'ingredient_to_waterfootprint'
 def index():
     return render_template("index.html")
 
-
 @app.route("/data/recipies")
 def data_recipies():
     connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
@@ -62,23 +61,6 @@ def data_ingredients():
     print "Number of distinct ingredients:",len(ingredients)
 
     json_resp = json.dumps(ingredients, default=json_util.default)
-    connection.close()
-    return json_resp
-
-@app.route("/data/wftest")
-def data_wftest():
-    connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
-    collection = connection[DBS_NAME][COLLECTION_CROP]
-
-    example = collection.find_one();
-    wf = example['water_footprint_global_average']
-    list = []
-    for key in wf:
-        list.append({'name': key, 'value': wf[key]})
-
-    print list    
-
-    json_resp = json.dumps(list, default=json_util.default)
     connection.close()
     return json_resp
 
@@ -143,6 +125,80 @@ def data_waterfootprint_per_ingredient(ingredientName):
     json_resp = json.dumps(waterfootprint, default=json_util.default)
     connection.close()
     return json_resp
+
+# Returns the GLOBAL AVERAGE water footprint associated to an ingredient/product
+@app.route("/data/ingredient/globalwaterfootprint/<ingredientName>")
+def data_globalwaterfootprint_per_ingredient(ingredientName):
+    connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
+    collection = connection[DBS_NAME][COLLECTION_INGREDIENT_TO_WATERFP]
+    collection2 = connection[DBS_NAME][COLLECTION_CROP]
+
+    print "Processing:", ingredientName
+    ing_wf = collection.find_one({"ingredient":ingredientName})
+
+    waterfootprint = {}
+
+    if ing_wf:
+        wf = collection2.find_one({"product_category":ing_wf['product_category'], "product":ing_wf["product"]})
+        if wf:
+            waterfootprint = wf['water_footprint_global_average']
+
+    # print "Water footprint:", waterfootprint['water_footprint_global_average']
+
+    json_resp = json.dumps(waterfootprint, default=json_util.default)
+    connection.close()
+    return json_resp
+
+@app.route("/data/wftest")
+def data_wftest():
+    connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
+    collection = connection[DBS_NAME][COLLECTION_CROP]
+
+    example = collection.find_one();
+    wf = example['water_footprint_global_average']
+    #list = []
+    #for key in wf:
+    #    list.append({'name': key, 'value': wf[key]})
+
+    #print list    
+
+    json_resp = json.dumps(wf, default=json_util.default)
+    connection.close()
+    return json_resp
+
+# Returns the Global Water Footprint (Agreggated from all the products) 
+@app.route("/data/ingredient/globalwaterfootprint")
+def data_globalwaterfootprint():
+    connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
+    collection = connection[DBS_NAME][COLLECTION_CROP]
+    
+    aggregation = collection.aggregate([ { 
+        '$group': { 
+            '_id': None,
+            'totalBlue': {'$sum': '$water_footprint_global_average.blue'},
+            'totalGreen': {'$sum': '$water_footprint_global_average.green'},
+            'totalGrey': {'$sum': '$water_footprint_global_average.grey'},             
+            'avgBlue': {'$avg': '$water_footprint_global_average.blue'},
+            'avgGreen': {'$avg': '$water_footprint_global_average.green'},
+            'avgGrey': {'$avg': '$water_footprint_global_average.grey'}             
+        } } ] )
+    
+    print aggregation['result'];    
+    
+    water_footprint = {}
+    if aggregation['ok'] == 1:
+        #water_footprint['blue'] = aggregation['result'][0]['totalBlue']
+        #water_footprint['green'] = aggregation['result'][0]['totalGreen']
+        #water_footprint['grey'] = aggregation['result'][0]['totalGrey']
+        water_footprint['blue'] = aggregation['result'][0]['avgBlue']
+        water_footprint['green'] = aggregation['result'][0]['avgGreen']
+        water_footprint['grey'] = aggregation['result'][0]['avgGrey']
+
+    return json.dumps(water_footprint)
+  
+    
+    connection.close()
+
 
 @app.route("/data/recipe/waterfootprint/<ingredients>")
 def recipe_waterfootprint(ingredients):
