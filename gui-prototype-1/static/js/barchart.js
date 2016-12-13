@@ -195,7 +195,8 @@ function queryGwfAndUpdateBarChart(ingredient){
 $(document).ready(function() {
     initBarChartGWF();
     
-    d3.json('http://localhost:5000/data/wftest', function(error, jsonData) {
+    //d3.json('http://localhost:5000/data/wftest', function(error, jsonData) {
+    d3.json('/data/ingredient/globalwaterfootprint', function(error, jsonData) {
         /*var data = [ 
             {'name': 'blue',  'value':+jsonData.blue}, 
             {'name': 'green', 'value':+jsonData.green},
