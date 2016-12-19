@@ -1,0 +1,50 @@
+[
+   {
+       "id": 1,
+       "name": "Rice"
+   },
+   {
+       "id": 2,
+       "name": "Potatoes"
+   },
+
+   {
+       "id": 3,
+       "name": "Mushrooms"
+   },
+
+   {
+       "id": 4,
+       "name": "Garlics"
+   },
+
+   {
+       "id": 5,
+       "name": "Eggs"
+   },
+
+   {
+       "id": 6,
+       "name": "Tomatoes"
+   },
+
+   {
+       "id": 7,
+       "name": "Ginger"
+   },
+
+   {
+       "id": 8,
+       "name": "Onion"
+   },
+
+   {
+       "id": 9,
+       "name": "Carrots"
+   },
+
+   {
+       "id": 10,
+       "name": "Milk"
+   }
+]
