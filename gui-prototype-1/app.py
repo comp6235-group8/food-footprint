@@ -217,26 +217,43 @@ def recipe_waterfootprint(ingredients):
 
     return json.dumps(water_footprints)
 
-@app.route("/data/recipes/waterfootprint/<recipes>")
-def recipes_waterfootprint(recipes):
-    recipes = recipes.split(",")
-    water_footprint_all=[]
-    for recipe in recipes:
-        ingredients = json.loads(data_ingredients_per_recipe(recipe))
-        water_footprints_acc = {"blue": [], "green": [], "grey": []}
-        for ingredient in ingredients:
-            water_footprint = json.loads(data_waterfootprint_per_ingredient(ingredient))
-            if "water_footprint_global_average" in water_footprint:
-                for footprint_type in ["blue", "green", "grey"]:
-                    if water_footprint["water_footprint_global_average"][footprint_type]:
-                        water_footprints_acc[footprint_type].append(
-                            water_footprint["water_footprint_global_average"][footprint_type])
-        water_footprints = {}
-        for footprint_type in ["blue", "green", "grey"]:
-            water_footprints[footprint_type] = numpy.mean(water_footprints_acc[footprint_type])
-        water_footprint_ai={"name":recipe,"water_footprint":water_footprints}
-        water_footprint_all.append(water_footprint_ai)
+
+@app.route("/data/recipes/most_lowest_waterfootprint")
+def recipes_mostlowestwaterfootprint():
+    connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
+    collection = connection[DBS_NAME][COLLECTION_RECIPES]
+    most_water = collection.find({}).sort([("water_footprint.total",-1)]).limit(10)
+    low_water = collection.find({}).sort([("water_footprint.total",1)]).limit(10)
+    water_footprint_all = []
+    for recipe in most_water:
+        recipe_water = {}
+        recipe_water["name"] = recipe["recipeName"];
+        recipe_water["water_footprint"] = recipe["water_footprint"];
+        water_footprint_all.append(recipe_water)
+    for recipe in low_water:
+        recipe_water = {}
+        recipe_water["name"] = recipe["recipeName"];
+        recipe_water["water_footprint"] = recipe["water_footprint"];
+        water_footprint_all.append(recipe_water)
+    connection.close()
     return json.dumps(water_footprint_all)
+
+@app.route("/data/recipes/popular_waterfootprint")
+def recipes_popularwaterfootprint():
+    connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
+    collection = connection[DBS_NAME][COLLECTION_RECIPES]
+    popular_water = collection.find({}).sort([("rating",-1)]).limit(10)
+    water_footprint_all = []
+    for recipe in popular_water:
+        recipe_water = {}
+        recipe_water["name"] = recipe["recipeName"];
+        recipe_water["water_footprint"] = recipe["water_footprint"];
+        water_footprint_all.append(recipe_water)
+    connection.close()
+    return json.dumps(water_footprint_all)
+
+
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',port=5000,debug=True)
