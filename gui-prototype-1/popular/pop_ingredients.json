@@ -1,50 +1,50 @@
 [
    {
        "id": 1,
-       "name": "Rice"
+       "name": "rice"
    },
    {
        "id": 2,
-       "name": "Potatoes"
+       "name": "potatoes"
    },
 
    {
        "id": 3,
-       "name": "Mushrooms"
+       "name": "oil"
    },
 
    {
        "id": 4,
-       "name": "Garlics"
+       "name": "garlic"
    },
 
    {
        "id": 5,
-       "name": "Eggs"
+       "name": "wine"
    },
 
    {
        "id": 6,
-       "name": "Tomatoes"
+       "name": "tomatoes"
    },
 
    {
        "id": 7,
-       "name": "Ginger"
+       "name": "ginger"
    },
 
    {
        "id": 8,
-       "name": "Onion"
+       "name": "onions"
    },
 
    {
        "id": 9,
-       "name": "Carrots"
+       "name": "carrots"
    },
 
    {
        "id": 10,
-       "name": "Milk"
+       "name": "milk"
    }
 ]
