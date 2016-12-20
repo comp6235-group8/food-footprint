@@ -34,33 +34,8 @@ svg {
   .y .tick line {
     stroke: #ddd;
   }
-    .d3-tip {
-  line-height: 1;
-  font-weight: bold;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 2px;
-}
-    /* Style northward tooltips differently */
-.d3-tip.n:after {
-  margin: -1px 0 0 0;
-  top: 100%;
-  left: 0;
-}
 
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-  box-sizing: border-box;
-  display: inline;
-  font-size: 10px;
-  width: 100%;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.8);
-  content: "\25BC";
-  position: absolute;
-  text-align: center;
-}
+
 </style>
 
 
@@ -72,8 +47,8 @@ svg {
 </div>
 
 <div class="row">
-<div class="col-md-5">
-<div class="panel panel-default" style="width: 550px">
+<div class="col-md-4">
+<div class="panel panel-default" style="width: 450px">
   <!-- Default panel contents -->
   <div class="panel-heading" align="center">The most 10 popular recipes</div>
   <!-- Table -->
@@ -81,50 +56,49 @@ svg {
   </table>
 </div>
     </div>
-<div class="col-md-5">
-<svg width="550" height="500"></svg>
+<div class="col-md-3">
+<svg width="450" height="500"></svg>
     </div>
+<div class="col-md-1">
     </div>
+<div class="col-md-4">
+    <h4>Top 10 most water footprint recipes</h4>
+<ol id="most_recipe">
+</ol>
+    <h4>Top 10 lowest water footprint recipes</h4>
+<ol id="least_recipe">
+</ol>
+    </div>
+     </div>
 <script>
 
 
-    d3.json("dishes.json",function(error,data) {
-        var ingredients=[];
-        var name=[];
-    for(var i=0;i<data.length;i++)
-    {
-        ingredients[i]=data[i]["ingredients"];
-        name[i]=data[i]["name"];
-    }
-    getwaterfootprint_ingredient(name);
-    })
-
-
-    function getwaterfootprint_ingredient(name) {
-       d3.json('http://0.0.0.0:5000/data/recipes/waterfootprint/' + name, function (error, jsonData) {
-
-
-           var str="<tr><th>rank<span class='glyphicon glyphicon-heart'></span></th><th align='center'>recipe name</th><th align='center'>water footprint</thcol></tr>";
-           for(var i=0;i<jsonData.length;i++)
+    d3.json("http://0.0.0.0:5000/data/recipes/popular_waterfootprint",function(error,data) {
+        var str="<tr><th>rank<span class='glyphicon glyphicon-heart'></span></th><th align='center'>recipe name</th><th align='center'>water footprint</th></tr>";
+           for(var i=0;i<data.length;i++)
             {
-                var blue=jsonData[i]["water_footprint"]["blue"].toFixed(2);
-                var green=jsonData[i]["water_footprint"]["green"].toFixed(2);
-                var grey=jsonData[i]["water_footprint"]["grey"].toFixed(2);
-                var all=(parseFloat(blue)+parseFloat(green)+parseFloat(grey)).toFixed(2);
-                jsonData[i]["water_footprint"]["all"] = all;
-                str+="<tr><td>"+(i+1)+"</td><td>"+jsonData[i]["name"]+"</td><td>"+all+"</td></tr>"
+                var blue=data[i]["water_footprint"]["blue"].toFixed(2);
+                var green=data[i]["water_footprint"]["green"].toFixed(2);
+                var grey=data[i]["water_footprint"]["grey"].toFixed(2);
+                var all=data[i]["water_footprint"]["total"].toFixed(2);
+                str+="<tr><td>"+(i+1)+"</td><td>"+data[i]["name"]+"</td><td>"+all+"</td></tr>"
             }
            document.getElementById("top_recipe").innerHTML=str;
-            stacked_bar(jsonData);
-           //console.log(jsonData);
+            stacked_bar(data);
+    })
 
-       })
-    }
-
-
-
-
-
+    d3.json("http://localhost:5000/data/recipes/most_lowest_waterfootprint",function(error,data) {
+        console.log(data);
+        var str1='';
+        var str2='';
+        for(var i=0;i<10;i++)
+            {
+                str1+="<li>"+data[i]["name"]+"</li>"
+                str2+="<li>"+data[i+10]["name"]+"</li>"
+            }
+           document.getElementById("most_recipe").innerHTML=str1;
+           document.getElementById("least_recipe").innerHTML=str2;
+    })
 
 
 </script>

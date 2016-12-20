@@ -17,7 +17,7 @@ var data=[];
     console.log(data);
 
     var svg = d3.select("svg"),
-        margin = {top: 117, right: 20, bottom: 5, left: 40},
+        margin = {top: 80, right: 20, bottom: 45, left: 40},
         width = +svg.attr("width") - margin.left - margin.right,
         height = +svg.attr("height") - margin.top - margin.bottom,
         g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -34,16 +34,7 @@ var data=[];
         .range(["#0000FF", "#008000", "#808080"]);
 
     var stack = d3.stack();
-    var tip = d3.tip()
-        .attr('class', 'd3-tip')
-        .offset([-10, 0])
-        .html(function(d) {
-            return "<strong>blue:</strong> <span style='color:red'>" + d.data.blue.toFixed(2) + "</span>" +
-                "<strong>green:</strong> <span style='color:red'>" + d.data.green.toFixed(2) + "</span>" +
-                "<strong>grey:</strong> <span style='color:red'>" + d.data.grey.toFixed(2) + "</span>" +
-                "<strong>total:</strong> <span style='color:red'>" + d.data.total.toFixed(2) + "</span>";
-  })
-    svg.call(tip);
+
 
 //d3.csv("../popular/data.csv", type, function(error, data) {
     // if (error) throw error;
@@ -79,8 +70,20 @@ var data=[];
             return y(d[1]) - y(d[0]);
         })
         .attr("height", x.bandwidth())
-        .on('mouseover',tip.show)
-        .on('mouseout',tip.hidden)
+        .on('mouseover',function (d) {
+           g.selectAll('.water')
+               .attr("opacity",1)
+                .data([d.data.blue.toFixed(2),d.data.green.toFixed(2),d.data.grey.toFixed(2)])
+                .text(function (d) {
+            return d;
+        });
+
+        })
+        .on('mouseout',function () {
+            g.selectAll('.water').attr("opacity",0);
+
+
+        })
       ;
 
     /*g.append("g")
@@ -122,4 +125,10 @@ var data=[];
         .text(function (d) {
             return d;
         });
+     legend.append("text")
+         .attr("class","water")
+            .attr("x", width - 150)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .attr("text-anchor", "end")
 }
