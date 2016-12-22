@@ -1,15 +1,13 @@
 # What Dishes and their Ingredients Have the Highest Water Footprint?
 
-## Backend Requirements
-`pip install -r requirements.txt`
-## Frontend Requirements
-`npm install`
+## Requirements
+1. Make sure you have python 2.7 installed
+2. `pip install -r requirements.txt`
+3. Make sure you have a local MongoDB installed
+4. Import collections manually/run python scripts to load collections into MongoDB
+   (more info to come)
+
 ## How to get the backend flask running
-1. In the root folder run: `export FLASK_APP=app/water_fp.py`
-2. `flask run`
-
-## How to get the frontend running
-1. Make sure you have npm installed
-2. Navigate to the /frontend directory and run `npm install`
-3. To start a local web server, run: `npm start`
-
+1. `cd` into `gui-prototype-1`
+2. `python app.py`
+3. Navigate to localhost:5000 in your favourite browser
