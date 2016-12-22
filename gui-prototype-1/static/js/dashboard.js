@@ -61,11 +61,14 @@ $(document).ready(function() {
                             //events.prepend( '<div><b>'+type+' selection</b> - '+JSON.stringify( rowData )+'</div>' );
                             var ingredient = rowData[0][0];
                             queryGwfAndUpdateBarChart(ingredient);
+                            $(".chart-title.bar-title").text("Water Footprint for " + ingredient);
                             createMap(ingredient);
                         });
 
                         $.getJSON("/data/recipe/waterfootprint/" + ingredients.join(), function (footprint) {
                             console.log(footprint);
+                            updateBarChartGWF(footprint);
+                            $(".chart-title.bar-title").text("Average Water Footprint for all ingredients in " + recipeName);
                         });
 
                     });
