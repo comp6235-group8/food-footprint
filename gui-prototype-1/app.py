@@ -229,6 +229,5 @@ def ingredient_waterfootprint(ingredients):
     print ingredients
     return json.dumps(ingredients_waterfootprint)
 
-
 if __name__ == "__main__":
     app.run(host='0.0.0.0',port=5000,debug=True)
