@@ -217,6 +217,17 @@ def recipe_waterfootprint(ingredients):
 
     return json.dumps(water_footprints)
 
+# Return the waterfootprint of top 10 ingredients
+@app.route("/data/top_ingredients/waterfootprint/<ingredients>")
+def ingredient_waterfootprint(ingredients):
+    ingredients_waterfootprint = []
+    ingredients = ingredients.split(",")
+    for ingredient in ingredients:
+        waterfootprint = json.loads(data_globalwaterfootprint_per_ingredient(ingredient))
+        waterfootprint["product"] = ingredient
+        ingredients_waterfootprint.append(waterfootprint)
+    print ingredients
+    return json.dumps(ingredients_waterfootprint)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',port=5000,debug=True)
