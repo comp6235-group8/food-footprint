@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+ <html >
+ <head>
+     <meta charset="UTF-8">
+     <script src="http://d3js.org/d3.v3.min.js"></script>
+     <script src="https://code.jquery.com/jquery-1.12.3.js"></script>
+     <!-- <script src="js/stacked_bar_chart.js"></script> -->
+     <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+     <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+     <script src="https://d3js.org/d3.v4.min.js"></script>
+ </head>
+ <body>
+     <svg width="90" height="80"></svg>
+     <script>
+     var diameter = 600, //max size of the bubbles
+         color    = d3.scale.category20b(); //color category
+     var bubble = d3.layout.pack()
+         .sort(null)
+         .size([diameter, diameter])
+         .padding(1.5);
+     var svg = d3.select("body")
+         .append("svg")
+         .attr("width", diameter)
+         .attr("height", diameter)
+         .attr("class", "bubble");
+
+    d3.json("pop_ingredients.json", function(error, data){
+    //convert numerical values from strings to numbers
+       var ingredient_names= [];
+       for (var i = 0 ; i < data.length ; i++) {
+           ingredient_names[i] = data[i]["name"];
+       }
+//       console.log(ingredient_names);
+       get_ingredient_waterfootprint(ingredient_names);
+   });
+    function get_ingredient_waterfootprint(name) {
+        d3.json('http://localhost:5000/data/top_ingredients/waterfootprint/' + name, function (error, jsondata) {
+            console.log(jsondata);
+            data = jsondata.map(function(d){ d.value = d["blue"] + d["green"] + d["grey"]; return d; });
+            console.log(data);
+
+            //bubbles needs very specific format, convert data to this.
+            var nodes = bubble.nodes({children:data}).filter(function(d) { return !d.children; });
+
+            //setup the chart
+            var bubbles = svg.append("g")
+                .attr("transform", "translate(0,0)")
+                .selectAll(".bubble")
+                .data(nodes)
+                .enter();
+
+            //create the bubbles
+            bubbles.append("circle")
+                .attr("r", function(d){ return d.r; })
+                .attr("cx", function(d){ return d.x; })
+                .attr("cy", function(d){ return d.y; })
+                .style("fill", function(d) { return color(d.value); });
+
+            //format the text for each bubble
+            bubbles.append("text")
+                .attr("x", function(d){ return d.x; })
+                .attr("y", function(d){ return d.y + 5; })
+                .attr("text-anchor", "middle")
+                .text(function(d){ return d["product"]; })
+                .style({
+                    "fill":"white",
+                    "font-family":"Helvetica Neue, Helvetica, Arial, san-serif",
+                    "font-size": "12px"
+                });
+        })
+    }
+</script>
+</body>
+</html>
