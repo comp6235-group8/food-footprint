@@ -16,7 +16,7 @@ var data=[];
     }
     console.log(data);
 
-    var svg = d3.select("svg"),
+    var svg = d3.select("#recipe_bar"),
         margin = {top: 80, right: 20, bottom: 45, left: 40},
         width = +svg.attr("width") - margin.left - margin.right,
         height = +svg.attr("height") - margin.top - margin.bottom,
