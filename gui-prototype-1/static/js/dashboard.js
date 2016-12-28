@@ -2,17 +2,26 @@ $(document).ready(function() {
     // Initialize table
     var table = $('#recipe_table').DataTable({
         data : [],
-        columns : [ {title : "Recipe"} ]
+        columns : [ {title : "Recipe"} ],
+        "scrollY":        "200px",
+        "scrollCollapse": true,
+        "paging":         false
     });
 
     var ingredientByRecipeTable = $('#ingredient_table_by_recipe').DataTable({
         data : [],
-        columns : [ {title : "Ingredient"} ]
+        columns : [ {title : "Ingredient"} ],
+        "scrollY":        "200px",
+        "scrollCollapse": true,
+        "paging":         false
     });
 
     var totalIngredientsTable = $('#ingredient_table').DataTable({
         data : [],
-        columns : [ {title : "Ingredient"} ]
+        columns : [ {title : "Ingredient"} ],
+        "scrollY":        "200px",
+        "scrollCollapse": true,
+        "paging":         false
     });
     $(".recipe-search").keypress(function (e) {
         if (e.which == 13) {
@@ -28,17 +37,19 @@ $(document).ready(function() {
                         style: 'single'
                     },
                     data : data,
-                    columns : [ {title : "Recipe"} ]
+                    columns : [ {title : "Recipe"} ],
+                    "scrollY":        "200px",
+                    "scrollCollapse": true,
+                    "paging":         false
                 });
 
                 table.on('select', function ( e, dt, type, indexes ) {
                     var rowData = table.rows( indexes ).data().toArray();
                     //events.prepend( '<div><b>'+type+' selection</b> - '+JSON.stringify( rowData )+'</div>' );
-                    console.log(rowData);
+                    //console.log(rowData);
                     var recipeName = rowData[0];
-                    console.log("hello");
                     $.getJSON("/data/recipe/ingredients/" + recipeName, function (ingredients) {
-                        console.log(ingredients);
+                        //console.log(ingredients);
                         $(".total-ingredients").css("display", "none");
                         $(".ingredients-by-recipe").css("display", "block");
                         var data = [];
@@ -52,7 +63,10 @@ $(document).ready(function() {
                                 style: 'single'
                             },
                             data : data,
-                            columns : [ {title : "Ingredient"} ]
+                            columns : [ {title : "Ingredient"} ],
+                            "scrollY":        "200px",
+                            "scrollCollapse": true,
+                            "paging":         false
                         });
 
                         ingredientByRecipeTable
@@ -66,7 +80,7 @@ $(document).ready(function() {
                         });
 
                         $.getJSON("/data/recipe/waterfootprint/" + ingredients.join(), function (footprint) {
-                            console.log(footprint);
+                            //console.log(footprint);
                             updateBarChartGWF(footprint);
                             $(".chart-title.bar-title").text("Average Water Footprint for all ingredients in " + recipeName);
                         });
@@ -79,12 +93,12 @@ $(document).ready(function() {
 
 	// Load ingredients
 	$.getJSON('/data/ingredients', function(data_json) {
-		console.log(data_json.slice(0,10));		
+		//console.log(data_json.slice(0,10));		
 		var data = [];
 		$.each(data_json, function(key, row) {
 			data.push([row]);
 		});
-		console.log(data.slice(0,10));
+		//console.log(data.slice(0,10));
 		totalIngredientsTable.destroy();
 
 		totalIngredientsTable = $('#ingredient_table').DataTable({
@@ -92,7 +106,10 @@ $(document).ready(function() {
 	            style: 'single'
 	        },
 			data : data,
-			columns : [ {title : "Ingredient"} ]
+			columns : [ {title : "Ingredient"} ],
+            "scrollY":        "200px",
+            "scrollCollapse": true,
+            "paging":         false
 		});
 		
 		totalIngredientsTable
