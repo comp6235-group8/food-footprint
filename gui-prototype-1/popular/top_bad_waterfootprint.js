@@ -55,7 +55,8 @@ d3.json("bad_crop.json", function(error, data) {
         .attr("dx", "-1em")
         .attr("dy", ".20em")
         .style("text-anchor", "end")
-        .style("font-size", "10px");
+        .style("font-size", "10px")
+        .style("font-weight", "bold");
 
     svg.append("g")
         .attr("class", "y axis")
@@ -82,7 +83,19 @@ d3.json("bad_crop.json", function(error, data) {
         .attr("height", function(d) { return height - y(d.value); })
         .style("fill", function(d) { return color(d.name); });
 
-
+    var _p3 = d3.format(".1f"); // save one number after point
+    var texts = state.selectAll(".MyText")
+        .data(function (d) {
+            return d.waterfootprint;
+        })
+        .enter()
+        .append("text")
+        .attr("x", function(d) { return x1(d.name)-12;})
+        .attr("y", function(d) { return y(d.value)-25;})
+        .attr("dx", 10)
+        .attr("dy",20)
+        .text(function(d) { return _p3(d.value); });
+    
     var legend = svg.selectAll(".legend")
         .data(types.slice().reverse())
         .enter().append("g")
