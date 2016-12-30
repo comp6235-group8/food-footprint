@@ -17,8 +17,8 @@ function gwfBasics() {
     bottom: 30,
     left: 50
   },
-  width = 300 - margin.left - margin.right,
-  height = 250 - margin.top - margin.bottom,
+  width = 270 - margin.left - margin.right,
+  height = 400 - margin.top - margin.bottom,
   colorBar = d3.scale.category20(),
   barPadding = 1;
   return {
@@ -50,7 +50,10 @@ function updateBarChartGWF(data){
         .rangeRoundBands([0, width], .1);
     var y = d3.scale.linear()
         .domain([0, d3.max(data, function(d) { return d.value; })])
-        .range([height, 0]);  
+        .range([height, 0]);
+    var colors = d3.scale.ordinal()
+        .domain(['blue', 'green', 'grey'])
+        .range(['steelblue', 'mediumseagreen', 'lightslategrey'])
 
     // Axis
     var xAxis = d3.svg.axis()
@@ -74,7 +77,7 @@ function updateBarChartGWF(data){
     bars.enter()
         .append("rect")
         .attr("class", "bar")
-        //.attr("fill", "#800")
+        .attr("fill", function(d, i) { return colors(d.name) })
         //.attr("stroke", "#800");
 
     //exit 

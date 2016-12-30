@@ -60,7 +60,7 @@ function bars(data){
         .scale(y)
         .orient("left");
 
-    var chart = d3.select("#barchart")
+    var chart = d3.select("#barchart");
 
     var bars = chart.selectAll("rect.bar")
         .data(data);

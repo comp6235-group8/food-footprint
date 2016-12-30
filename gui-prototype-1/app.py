@@ -199,7 +199,7 @@ def data_globalwaterfootprint():
     
     connection.close()
 
-
+# Gets the average water footprints for a recipe
 @app.route("/data/recipe/waterfootprint/<ingredients>")
 def recipe_waterfootprint(ingredients):
     water_footprints_acc = {"blue": [], "green": [], "grey": []}
@@ -215,7 +215,13 @@ def recipe_waterfootprint(ingredients):
     for footprint_type in ["blue", "green", "grey"]:
         water_footprints[footprint_type] = numpy.mean(water_footprints_acc[footprint_type])
 
-    return json.dumps(water_footprints)
+    def list_of_footprints(fp):
+        water_footprint_list = []
+        for fp_type in ["blue", "green", "grey"]:
+            water_footprint_list.append({"name": fp_type, "value": fp[fp_type]})
+        return water_footprint_list
+
+    return json.dumps(list_of_footprints(water_footprints))
 
 
 @app.route("/data/recipes/most_lowest_waterfootprint")
