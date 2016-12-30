@@ -2,6 +2,12 @@
 //         width = 960 - margin.left - margin.right,
 //         height = 560 - margin.top - margin.bottom;
 
+$(document).ready(function() {
+    good_crop();
+})
+function good_crop() {
+
+
     var x0 = d3.scale.ordinal()
         .rangeRoundBands([0, width], .1);
 
@@ -34,7 +40,7 @@
         height = +svg.attr("height") - margin.top - margin.bottom,
         g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    d3.json("good_crop.json", function(error, data) {
+    d3.json("../static/js/good_crop.json", function(error, data) {
         if (error) throw error;
 
         var types = d3.keys(data[0]).filter(function(key) { return (key !== "product") && (key !== "amount"); });
@@ -42,7 +48,6 @@
         data.forEach(function(d) {
             d.waterfootprint = types.map(function(name) { return {name: name, value: +d[name]}; });
         });
-        console.log(data);
         x0.domain(data.map(function(d) { return d.product; }));
         x1.domain(types).rangeRoundBands([0, x0.rangeBand()]);
         y.domain([0, d3.max(data, function(d) { return d3.max(d.waterfootprint, function(d) { return d.value; }); })]);
@@ -123,3 +128,4 @@
             .text(function(d) { return d; });
 
     });
+    }
