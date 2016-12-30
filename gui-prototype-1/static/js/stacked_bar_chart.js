@@ -13,7 +13,7 @@
     })
 
     d3.json("http://localhost:5000/data/recipes/most_lowest_waterfootprint",function(error,data) {
-        console.log(data);
+        //console.log(data);
         var str1='';
         var str2='';
         for(var i=0;i<10;i++)
@@ -74,7 +74,7 @@ function stacked_bar(jsondata) {
         .orient('left'),
     colours = ["white","#4682B4","#556B2F","#A9A9A9"];
     var data_all=["",dataset[0],dataset[1],dataset[2]];
-    console.log(data_all);
+    //console.log(data_all);
     var groups = svg.selectAll('g')
         .data(data_all)
         .enter()
