@@ -65,94 +65,75 @@ svg {
             <div class="navbar-header">
                 <a class="navbar-brand" href="./">Water footprint by Recipe and Ingredient</a>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-left">
-                    <li><a href="http://ecs.soton.ac.uk/">Home</a></li>
-                    <li><a href="http://ecs.soton.ac.uk/">Team</a></li>
-                </ul>
-            </div>
+
+            <div id="navbar" class="navbar-collapse collapse">
+	          <ul class="nav navbar-nav navbar-right">
+				<li> <a class="" role="button" data-toggle="collapse" href="#WFP_tables" aria-expanded="false"> Tables </a> </li>
+				<li> <a class="" role="button" data-toggle="collapse" href="#WFP_barchart" aria-expanded="false"> Barchart </a> </li>
+	          </ul>
+	        </div>
         </div>
     </div>
-	<div id="myCarousel" class="carousel slide">
-				<!-- Carousel items -->
-				<div class="carousel-inner">
-					<div class="active item">
 
-    <div class="row">
-        <div class="col-sm-4">
-            <div class="input-group">
+   <div class="row">
+    	<div class="col-sm-3 collapse in" id="WFP_tables">
+    		<!-- Search input -->
+    		<div class="input-group">
                 <input type="text" class="form-control recipe-search" placeholder="Search for recipes...">
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" disabled>Go!</button>
                 </span>
-            </div><!-- /input-group -->
-        </div><!-- /.col-lg-6 -->
-    </div><!-- /.row -->
-	<div class="container-fluid">
-		<div class="row">
-
-			<div class="col-sm-4">
-				<div class="chart-wrapper">
-					<div class="chart-title">Recipies</div>
-					<div class="chart-stage">
-						<table id="recipe_table" class="display"></table>
-					</div>
-					<div class="chart-notes">You can choose a dish and find out
-						how much water footprint his ingredients cause.</div>
+            </div>
+            <!-- Recipes -->
+			<div class="chart-wrapper">
+				<div class="chart-title">Recipies</div>
+				<div class="chart-stage">
+					<table id="recipe_table" class="display"></table>
 				</div>
+				<div class="chart-notes">You can choose a dish and find out
+					how much water footprint his ingredients cause.</div>
+			</div>
+			<!-- Ingredients #1-->
+			<div class="chart-wrapper total-ingredients">
+				<div class="chart-title">Ingredients / products</div>
+				<div class="chart-stage">
+					<table id="ingredient_table" class="display"></table>
+				</div>
+				<div class="chart-notes">You can choose an ingredient or product to view its corresponding water foodprint.</div>
 			</div>
 
-			<div class="col-sm-3 total-ingredients">
-				<div class="chart-wrapper">
-					<div class="chart-title">Ingredients / products</div>
-					<div class="chart-stage">
-						<table id="ingredient_table" class="display"></table>
-					</div>
-					<div class="chart-notes">You can choose an ingredient or product to view its corresponding water foodprint.</div>
+			<!-- Ingredients #2-->
+			<div class="chart-wrapper ingredients-by-recipe" >
+				<div class="chart-title">Ingredients / products</div>
+				<div class="chart-stage">
+					<table id="ingredient_table_by_recipe" class="display"></table>
 				</div>
+				<div class="chart-notes">You can choose an ingredient or product to view its corresponding water foodprint.</div>
 			</div>
 
-			<div class="col-sm-3 ingredients-by-recipe">
-				<div class="chart-wrapper">
-					<div class="chart-title">Ingredients / products</div>
-					<div class="chart-stage">
-						<table id="ingredient_table_by_recipe" class="display"></table>
-					</div>
-					<div class="chart-notes">You can choose an ingredient or product to view its corresponding water foodprint.</div>
-				</div>
-			</div>
-
-			<div class="col-sm-3">
-	            <div class="chart-wrapper">
-	              <div class="chart-title">Water footprint</div>
-	              <div class="chart-stage">
-	                <svg id="wfp_barchart_svg"></svg>
-	              </div>
-	            </div>
-          	</div>
-		</div>
-		<div class="row map">
-			<div class="col-sm-12">
+    	</div>
+    	<div class="col-sm-7">
+    		<!-- Map -->
+    		<div>
 				<p id="wf-country-label"></p>
 				<div id="tooltip-container"></div>
 				<div id="canvas-svg"></div>
 			</div>
-		</div>
-	</div>
-						</div>
-<div class="item">
-    <!--    <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script src="https://code.jquery.com/jquery-1.12.3.js"></script>
-    <script src="../static/js/stacked_bar_chart.js"></script>
-    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-
-<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
-
--->
+    	</div>
+    	<div class="col-sm-2">
+    		<!-- Barchart -->
+    		<div class="chart-wrapper collapse in" id="WFP_barchart">
+              <div class="chart-title bar-title">Water footprint</div>
+              <div class="chart-stage">
+                <svg id="wfp_barchart_svg"></svg>
+              </div>
+            </div>
+    	</div>
+    </div>
+<hr style="height:1px;border:none;border-top:1px dashed #0066CC;" />
 <div class="row">
 <div class="col-md-4">
-<div class="panel panel-default" style="width: 410px" align="center">
+<div class="panel panel-default" style="width: 400px" align="center">
   <!-- Default panel contents -->
   <div class="panel-heading" align="center"><h4>The most 10 popular recipes</h4></div>
   <!-- Table -->
@@ -179,13 +160,6 @@ svg {
 
 
 
-    </div>
 
-
-				</div>
-				<!-- Carousel nav -->
-				<a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-				<a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
-			</div>
 </body>
 </html>
