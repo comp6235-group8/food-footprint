@@ -35,7 +35,7 @@ function good_crop() {
         .ticks(20)
         .tickFormat(d3.format(".2s"));
     var constant = 50;
-    d3.json("../../data/good_crop.json", function (error, data) {
+    d3.json("../static/good_crop.json", function (error, data) {
         if (error) throw error;
 
         var types = d3.keys(data[0]).filter(function (key) {

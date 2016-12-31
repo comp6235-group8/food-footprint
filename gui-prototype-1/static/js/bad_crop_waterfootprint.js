@@ -33,7 +33,7 @@ function bad_crop() {
 
     var constant = 50;
 
-    d3.json("../../data/bad_crop.json", function (error, data) {
+    d3.json("../static/bad_crop.json", function (error, data) {
         if (error) throw error;
 
         var types = d3.keys(data[0]).filter(function (key) {
