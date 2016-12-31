@@ -1,37 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-    <title>Water foodprint per dish/ingredient</title>
-    <meta name='viewport'
-          content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'/>
-    <link rel="stylesheet" href="./static/lib/css//bootstrap.min.css">
-    <link rel="stylesheet" href="./static/lib/css/keen-dashboards.css">
-    <link rel="stylesheet" href="./static/lib/css/dc.css">
-    <link rel="stylesheet" href="./static/css/custom.css">
-    <link rel="stylesheet" href="./static/css/map.css">
-    <link rel="stylesheet" href="./static/css/barchart.css">
-    <link rel="stylesheet" type="text/css"
-          href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css"
-          href="https://cdn.datatables.net/select/1.2.0/css/select.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-1.12.3.js"></script>
-    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/select/1.2.0/js/dataTables.select.min.js"></script>
-    <!-- <script src="./static/lib/js/jquery.min.js"></script> -->
-    <script src="./static/lib/js/bootstrap.min.js"></script>
-    <!-- <script src="./static/lib/js/crossfilter.js"></script> -->
-    <!-- <script src="./static/lib/js/d3.js"></script> -->
-    <!-- <script src="./static/lib/js/dc.js"></script> -->
-    <!-- <script src="./static/lib/js/queue.js"></script>  -->
-    <script src="./static/lib/js/keen.min.js"></script>
-    <!-- <script src='./static/js/graphs.js' type='text/javascript'></script> -->
-    <script src='./static/js/barchart.js' type='text/javascript'></script>
-    <script src='./static/js/dashboard.js' type='text/javascript'></script>
-    <script src='./static/js/map.js' type='text/javascript'></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.1.0/topojson.min.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-
 <title>Water foodprint per dish/ingredient</title>
 <meta name='viewport'
 	content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
@@ -56,140 +25,129 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.1.0/topojson.min.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
-
     <script src="../static/js/stacked_bar_chart.js"></script>
     <script src="../static/js/good_crop_waterfootprint.js"></script>
     <script src="../static/js/bad_crop_waterfootprint.js"></script>
 
-    <style>
-        svg {
-            font: 10px sans-serif;
-            shape-rendering: crispEdges;
-        }
 
-        .axis path,
-        .axis line {
-            fill: none;
-            stroke: #000;
-        }
-
-        path.domain {
-            stroke: none;
-        }
-
-        .y .tick line {
-            stroke: #ddd;
-        }
-
-
-    </style>
+<style>
+svg {
+    font: 10px sans-serif;
+    shape-rendering: crispEdges;
+  }
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+  }
+  path.domain {
+    stroke: none;
+  }
+  .y .tick line {
+    stroke: #ddd;
+  }
+</style>
 
 </head>
 
 <body class="application">
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="./">Water footprint by Recipe and Ingredient</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a class="" role="button" data-toggle="collapse" href="#WFP_tables" aria-expanded="false">
-                    Tables </a></li>
-                <li><a class="" role="button" data-toggle="collapse" href="#WFP_barchart" aria-expanded="false">
-                    Barchart </a></li>
-            </ul>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="./">Water footprint by Recipe and Ingredient</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+	          <ul class="nav navbar-nav navbar-right">
+				<li> <a class="" role="button" data-toggle="collapse" href="#WFP_tables" aria-expanded="false"> Tables </a> </li>
+				<li> <a class="" role="button" data-toggle="collapse" href="#WFP_barchart" aria-expanded="false"> Barchart </a> </li>
+	          </ul>
+	        </div>
         </div>
     </div>
-</div>
-<div class="row">
+   <div class="row">
     <div class="row">
-        <div class="col-sm-3 collapse in" id="WFP_tables">
-            <!-- Search input -->
-            <div class="input-group">
+    	<div class="col-sm-3 collapse in" id="WFP_tables">
+    		<!-- Search input -->
+    		<div class="input-group">
                 <input type="text" class="form-control recipe-search" placeholder="Search for recipes...">
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" disabled>Go!</button>
                 </span>
             </div>
             <!-- Recipes -->
-            <div class="chart-wrapper">
-                <div class="chart-title">Recipies</div>
-                <div class="chart-stage">
-                    <table id="recipe_table" class="display"></table>
-                </div>
-                <div class="chart-notes">You can choose a dish and find out
-                    how much water footprint his ingredients cause.
-                </div>
-            </div>
-            <!-- Ingredients #1-->
-            <div class="chart-wrapper total-ingredients">
-                <div class="chart-title">Ingredients / products</div>
-                <div class="chart-stage">
-                    <table id="ingredient_table" class="display"></table>
-                </div>
-                <div class="chart-notes">You can choose an ingredient or product to view its corresponding water
-                    foodprint.
-                </div>
-            </div>
+			<div class="chart-wrapper">
+				<div class="chart-title">Recipies</div>
+				<div class="chart-stage">
+					<table id="recipe_table" class="display"></table>
+				</div>
+				<div class="chart-notes">You can choose a dish and find out
+					how much water footprint his ingredients cause.</div>
+			</div>
+			<!-- Ingredients #1-->
+			<div class="chart-wrapper total-ingredients">
+				<div class="chart-title">Ingredients / products</div>
+				<div class="chart-stage">
+					<table id="ingredient_table" class="display"></table>
+				</div>
+				<div class="chart-notes">You can choose an ingredient or product to view its corresponding water foodprint.</div>
+			</div>
 
-            <!-- Ingredients #2-->
-            <div class="chart-wrapper ingredients-by-recipe">
-                <div class="chart-title">Ingredients / products</div>
-                <div class="chart-stage">
-                    <table id="ingredient_table_by_recipe" class="display"></table>
-                </div>
-                <div class="chart-notes">You can choose an ingredient or product to view its corresponding water
-                    foodprint.
-                </div>
-            </div>
+			<!-- Ingredients #2-->
+			<div class="chart-wrapper ingredients-by-recipe" >
+				<div class="chart-title">Ingredients / products</div>
+				<div class="chart-stage">
+					<table id="ingredient_table_by_recipe" class="display"></table>
+				</div>
+				<div class="chart-notes">You can choose an ingredient or product to view its corresponding water foodprint.</div>
+			</div>
 
-        </div>
-        <div class="col-sm-7">
-            <!-- Map -->
-            <div>
-                <p id="wf-country-label"></p>
-                <div id="tooltip-container"></div>
-                <div id="canvas-svg"></div>
+    	</div>
+    	<div class="col-sm-7">
+    		<!-- Map -->
+    		<div>
+				<p id="wf-country-label"></p>
+				<div id="tooltip-container"></div>
+				<div id="canvas-svg"></div>
+			</div>
+    	</div>
+    	<div class="col-sm-2">
+    		<!-- Barchart -->
+    		<div class="chart-wrapper collapse in" id="WFP_barchart">
+              <div class="chart-title bar-title">Water footprint</div>
+              <div class="chart-stage">
+                <svg id="wfp_barchart_svg"></svg>
+              </div>
             </div>
-        </div>
-        <div class="col-sm-2">
-            <!-- Barchart -->
-            <div class="chart-wrapper collapse in" id="WFP_barchart">
-                <div class="chart-title bar-title">Water footprint</div>
-                <div class="chart-stage">
-                    <svg id="wfp_barchart_svg"></svg>
-                </div>
-            </div>
-        </div>
+    	</div>
     </div>
-    <hr style="height:1px;border:none;border-top:1px dashed #0066CC;"/>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel panel-default" style="width: 400px" align="center">
-                <!-- Default panel contents -->
-                <div class="panel-heading" align="center"><h4>The most 10 popular recipes</h4></div>
-                <!-- Table -->
-                <table class="table" id="top_recipe" style='text-align:center;font-size:14px'>
-                </table>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div style="height: 95px"><img src="../static/footprint_water.gif" width="320" height="70"></div>
-            <svg width="350" height="620" id="recipe_bar"></svg>
-        </div>
-        <div class="col-md-1">
-        </div>
-        <div class="col-md-4">
-            <h4>Top 10 most water footprint recipes</h4>
-            <ol id="most_recipe">
-            </ol>
-            <h4>Top 10 lowest water footprint recipes</h4>
-            <ol id="least_recipe">
-            </ol>
-        </div>
+<hr style="height:1px;border:none;border-top:1px dashed #0066CC;" />
+<div class="row">
+<div class="col-md-4">
+<div class="panel panel-default" style="width: 400px" align="center">
+  <!-- Default panel contents -->
+  <div class="panel-heading" align="center"><h4>The most 10 popular recipes</h4></div>
+  <!-- Table -->
+ <table class="table" id="top_recipe" style='text-align:center;font-size:14px'>
+  </table>
+</div>
     </div>
+
+<div class="col-md-3">
+    <div style="height: 95px"><img src="../static/footprint_water.gif" width="320" height="70"></div>
+<svg width="350" height="620"  id="recipe_bar"></svg>
+    </div>
+<div class="col-md-1">
+    </div>
+<div class="col-md-4">
+    <h4>Top 10 most water footprint recipes</h4>
+<ol id="most_recipe">
+</ol>
+    <h4>Top 10 lowest water footprint recipes</h4>
+<ol id="least_recipe">
+</ol>
+    </div>
+     </div>
+
      <hr style="height:1px;border:none;border-top:1px dashed #0066CC;"/>
     <div class="row">
         <div class="col-md-6">
