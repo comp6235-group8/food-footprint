@@ -44,11 +44,11 @@ function good_crop() {
 
         data.forEach(function (d) {
             d.waterfootprint = types.map(function (name) {
-                console.log(+d[name]);
+                //console.log(+d[name]);
                 return {name: name, value: +d[name]};
             });
         });
-        console.log(data);
+        //console.log(data);
         x0.domain(data.map(function (d) {
             return d.product;
         }));

@@ -23,6 +23,26 @@ $(document).ready(function() {
         "scrollCollapse": true,
         "paging":         false
     });
+
+    // Initialize map
+	var map = d3.geomap.choropleth()
+		.width(945)
+		.scale(220)
+		.rotate([-10,0,0])
+	    .geofile('/static/geojson/countries.json')
+	    .colors(colorbrewer.YlOrRd[9])
+	    .column('total')
+	    .format(d3.format(',.02f'))
+	    .legend(true)
+	    .unitId('countryCode');
+
+	queryWFPbyIngredient('wheat', function(data){
+		d3.select('#canvas-svg')
+			.datum(data)
+			.call(map.draw, map);
+	});
+
+   	// Search imput for recipes
     $(".recipe-search").keypress(function (e) {
         if (e.which == 13) {
             $.getJSON("/data/recipes/" + $(this).val(), function (recipes) {
@@ -76,7 +96,12 @@ $(document).ready(function() {
                             var ingredient = rowData[0][0];
                             queryGwfAndUpdateBarChart(ingredient);
                             $(".chart-title.bar-title").text("Water Footprint for " + ingredient);
-                            createMap(ingredient);
+                            
+                            // Update map
+                            //createMap(ingredient);
+                            updateWFPMap(ingredient, d3.select('#canvas-svg').datum(), function(){
+								map.column('total').update();
+							});
                         });
 
                         $.getJSON("/data/recipe/waterfootprint/" + ingredients.join(), function (footprint) {
@@ -118,9 +143,15 @@ $(document).ready(function() {
             //events.prepend( '<div><b>'+type+' selection</b> - '+JSON.stringify( rowData )+'</div>' );
             var ingredient = rowData[0][0];
             queryGwfAndUpdateBarChart(ingredient);
-            createMap(ingredient);
+            
+            // Update map
+            updateWFPMap(ingredient, d3.select('#canvas-svg').datum(), function(){
+				map.column('total').update();
+			});
         } );
+
+
+
 		
 	});
-
 });
