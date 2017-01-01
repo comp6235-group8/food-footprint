@@ -8,7 +8,7 @@ function bad_crop() {
         width = +svg.attr("width") - margin.left - margin.right,
         height = +svg.attr("height")- margin.top - margin.bottom,
         g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    console.log("ssssssssssssss");
+    //console.log("ssssssssssssss");
 
     var x0 = d3.scale.ordinal()
         .rangeRoundBands([0, width], .1);
@@ -45,7 +45,7 @@ function bad_crop() {
                 return {name: name, value: +d[name]};
             });
         });
-        console.log(data);
+        //console.log(data);
         x0.domain(data.map(function (d) {
             return d.product;
         }));
