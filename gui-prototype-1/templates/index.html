@@ -23,8 +23,10 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="./static/lib/keen-dashboard/keen.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.1.0/topojson.min.js"></script>
+
 <script src="./static/lib/d3-geomap-1.0.2/vendor/d3.geomap.dependencies.min.js"></script>
-<script src="./static/lib/d3-geomap-1.0.2/js/d3.geomap.min.js"></script>
+<!--<script src="./static/lib/d3-geomap-1.0.2/js/d3.geomap.min.js"></script>-->
+<script src="./static/lib/d3-geomap-1.0.2/js/d3.geomap.js"></script>
 
 <script src='./static/js/barchart.js' type='text/javascript'></script>
 <script src='./static/js/map.js' type='text/javascript'></script>
@@ -107,24 +109,25 @@ svg {
 				</div>
 				<div class="chart-notes">You can choose an ingredient or product to view its corresponding water foodprint.</div>
 			</div>
-
     	</div>
+      <!-- Map -->
     	<div class="col-sm-7">
-    		<!-- Map -->
-    		<div>
-				<p id="wf-country-label"></p>
-				<div id="tooltip-container"></div>
-				<div id="canvas-svg"></div>
-			</div>
+        <div class="chart-wrapper">
+          <div class="chart-title bar-title">Water footprint per country in m<sup>3</sup></div> 
+  				<div id="tooltip-container"></div> 
+          <div id="map"></div>
+          <div class="chart-notes">Sum of the water footprint of all the products</div>
+			  </div>
     	</div>
-    	<div class="col-sm-2">
-    		<!-- Barchart -->
+    	<!-- Barchart -->
+      <div class="col-sm-2">
     		<div class="chart-wrapper collapse in" id="WFP_barchart">
-              <div class="chart-title bar-title">Water footprint</div>
-              <div class="chart-stage">
-                <svg id="wfp_barchart_svg"></svg>
-              </div>
+            <div class="chart-title bar-title">Water footprint</div>
+            <div class="chart-stage">
+              <svg id="wfp_barchart_svg"></svg>
             </div>
+            <div class="chart-notes">Sum of the water footprint of all the products</div>
+        </div>
     	</div>
     </div>
 <hr style="height:1px;border:none;border-top:1px dashed #0066CC;" />

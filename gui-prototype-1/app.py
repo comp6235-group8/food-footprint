@@ -170,29 +170,60 @@ def data_wftest():
 @app.route("/data/ingredient/globalwaterfootprint")
 def data_globalwaterfootprint():
     connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
-    collection = connection[DBS_NAME][COLLECTION_CROP]
+    collection = connection[DBS_NAME][COLLECTION_CROP_AGGREGATED]
 
     aggregation = collection.aggregate([ {
         '$group': {
             '_id': None,
-            'totalBlue': {'$sum': '$water_footprint_global_average.blue'},
-            'totalGreen': {'$sum': '$water_footprint_global_average.green'},
-            'totalGrey': {'$sum': '$water_footprint_global_average.grey'},
-            'avgBlue': {'$avg': '$water_footprint_global_average.blue'},
-            'avgGreen': {'$avg': '$water_footprint_global_average.green'},
-            'avgGrey': {'$avg': '$water_footprint_global_average.grey'}
+            'totalBlue': {'$sum': '$global_wf.blue'},
+            'totalGreen': {'$sum': '$global_wf.green'},
+            'totalGrey': {'$sum': '$global_wf.grey'},
+            'avgBlue': {'$avg': '$global_wf.blue'},
+            'avgGreen': {'$avg': '$global_wf.green'},
+            'avgGrey': {'$avg': '$global_wf.grey'}
         } } ] )
 
     print aggregation['result'];
 
     water_footprint = {}
     if aggregation['ok'] == 1:
-        #water_footprint['blue'] = aggregation['result'][0]['totalBlue']
-        #water_footprint['green'] = aggregation['result'][0]['totalGreen']
-        #water_footprint['grey'] = aggregation['result'][0]['totalGrey']
-        water_footprint['blue'] = aggregation['result'][0]['avgBlue']
-        water_footprint['green'] = aggregation['result'][0]['avgGreen']
-        water_footprint['grey'] = aggregation['result'][0]['avgGrey']
+        water_footprint['blue'] = aggregation['result'][0]['totalBlue']
+        water_footprint['green'] = aggregation['result'][0]['totalGreen']
+        water_footprint['grey'] = aggregation['result'][0]['totalGrey']
+        #water_footprint['blue'] = aggregation['result'][0]['avgBlue']
+        #water_footprint['green'] = aggregation['result'][0]['avgGreen']
+        #water_footprint['grey'] = aggregation['result'][0]['avgGrey']
+
+    connection.close()
+    return json.dumps(water_footprint)
+
+# Returns the Global Water Footprint (Agreggated from all the products) BY COUNTRY
+@app.route("/data/globalwaterfootprintbycountry")
+def data_globalwaterfootprintbycountry():
+    connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
+    collection = connection[DBS_NAME][COLLECTION_CROP_AGGREGATED]
+
+    aggregation = collection.aggregate([ 
+        { '$project' : { 'product' : '$product', 'countries' : '$countries', '_id' : 0}},    
+        { '$unwind' : "$countries" },
+        { '$group': { '_id': '$countries.country', 
+            'blue': { '$sum': '$countries.wf_country_average.blue' }, 
+            'green': { '$sum': '$countries.wf_country_average.green' }, 
+            'grey': { '$sum': '$countries.wf_country_average.grey' } } 
+        },
+        { '$project' : { 'country':'$_id', 
+            'water_footprint_country_average.blue':'$blue',
+            'water_footprint_country_average.green':'$green',
+            'water_footprint_country_average.grey':'$grey', 
+            "_id":0}},
+        { '$sort' : { 'country' : 1 } }
+        ])
+
+    print aggregation['result'];
+
+    water_footprint = []
+    if aggregation['ok'] == 1:
+        water_footprint = aggregation['result']
 
     return json.dumps(water_footprint)
 
