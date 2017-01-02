@@ -3,6 +3,34 @@
     return d3.format(',.02f')(d);
 }*/
 
+var preprocessCountryData = function(data){
+  // Pre-processing WFP data per country
+  data.forEach(function(country){
+    // Create Code-Id (Alpha3)
+    if (countryCodeMapping[country.country]){
+      country.countryCode = countryCodeMapping[country.country];
+    }else{
+      //console.log("No country code for:" + country.country);
+      country.countryCode = "";
+    }
+
+    // Calculate the sum of the individual footprints
+    // TOTAL is the column used to apply the color by country
+    // TOTAL should be a String. This is how d3-geomaps works.
+    country["total"] = "";
+    var wfp = country["water_footprint_country_average"];
+    if (wfp && (wfp.blue || wfp.green || wfp.grey)){
+      var total = 0;
+      ["blue", "green", "grey"].forEach( function(color){
+        if (wfp[color]){
+          total = total + wfp[color];
+        }
+      });
+      country["total"] = ""+total;
+    }
+  });
+}
+
 var queryAggregatedWFPbyCountry = function(cb) {
 	d3.json('http://localhost:5000/data/globalwaterfootprintbycountry', function(error, data) {
 	  if (!data){ 
@@ -10,65 +38,48 @@ var queryAggregatedWFPbyCountry = function(cb) {
 	    return;
 	  }
 	  
-	  // Pre-processing WFP data per country
-	  data.forEach(function(country){
-	    // Create Code-Id (Alpha3)
-	    if (countryCodeMapping[country.country]){
-	      country.countryCode = countryCodeMapping[country.country];
-	    }else{
-	      //console.log("No country code for:" + country.country);
-	      country.countryCode = "";
-	    }
-
-	    // Calculate the sum of the individual footprints
-	    country["total"] = null;
-	    if (country["water_footprint_country_average"]){
-	      var total = 0;
-	      var colors = ["blue", "green", "grey"];
-	      for (var i = 0; i < colors.length; i++) {
-	        if (country["water_footprint_country_average"][colors[i]]){
-	          total = total + country["water_footprint_country_average"][colors[i]];
-	        }
-	      }
-	      country["total"] = ""+total;
-	    }
-	  });
-
-	  //data.forEach(function (country) {
-	  //  if (country["country"] === "Ecuador"){
-	  //    console.log(country);
-	  //  }
-	  //});
+	  preprocessCountryData(data);
 
 	  cb(data);
 	});
+}
+
+var findUpdatedCountry = function(data, countryCode){
+	for (var i = 0; i < data.length; i++) {
+		var country = data[i];
+		if (country.countryCode === countryCode){
+			return country;
+		}
+	}
+
+	return null;
 }
 
 var updateWFPMap = function(ingredient, cb) {
 	data = d3.select('#map').datum();
 
 	d3.json('http://localhost:5000/data/ingredient/waterfootprint/'+ingredient, function(error, newData) {
-	  if (!newData){ console.log("No data returned for ingredient: " + ingredient); return; }
-	  newData = newData.countries;
+	  if (!newData || !newData.countries){ 
+		// NO DATA
+	  	console.log("No data returned for ingredient: " + ingredient);
 
-	  data.forEach(function(country, index){
-	  	//console.log(i); console.log(country); console.log(newData[i]); return;
+	  	// Remove previous data
+	  	data.forEach(function(country, index){
+		    // Calculate the sum of the individual footprints
+		    country["total"] = "";
+		    country["water_footprint_country_average"] = null;
+		}); 
+	  }else{
+		  // DATA
+		  newData = newData.countries;
+		  preprocessCountryData(newData);
 
-	    // Calculate the sum of the individual footprints
-	    country["total"] = null;
-	    if (newData[index]["water_footprint_country_average"]){
-	      var total = 0;
-	      var colors = ["blue", "green", "grey"];
-	      for (var i = 0; i < colors.length; i++) {
-	        if (newData[index]["water_footprint_country_average"][colors[i]]){
-	          total = total + newData[index]["water_footprint_country_average"][colors[i]];
-	        }
-	      }
-	      country["total"] = ""+total;
-	    }
-
-	    //console.log(index); console.log(country); console.log(newData[i]); return;
-	  });
+		  data.forEach(function(country, index){
+		  	updated = findUpdatedCountry(newData, country["countryCode"]);
+		    country["total"] = updated["total"];
+		    country["water_footprint_country_average"] = updated["water_footprint_country_average"];
+		  });
+	  }
 
 	  cb(data);
 	});
@@ -96,10 +107,15 @@ var mouseMoveMethod = function(d, coordinates){
 	var country = findCountryById(d.id);
 	
 	if (country){
+		var total = "NA";	
 		var blue = "NA";
 		var green = "NA";
 		var grey = "NA";
 		var format = d3.format(',.02f');
+
+		if(country.total){
+			total = format(+country.total);
+		}
 
 		if(country["water_footprint_country_average"]){
 			if (country["water_footprint_country_average"]["blue"]){
@@ -121,7 +137,7 @@ var mouseMoveMethod = function(d, coordinates){
         html += "</span>";
         html += "<span class=\"tooltip_value\">";
         html += "<b>";
-        html += format(country.total)  + " m<sup>3</sup>";
+        html += total + " m<sup>3</sup>";
         html += "</b>";
         html += "";
         html += "</span>";
