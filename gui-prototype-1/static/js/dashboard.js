@@ -25,22 +25,7 @@ $(document).ready(function() {
     });
 
     // Initialize map
-	var map = d3.geomap.choropleth()
-		.width(945)
-		.scale(220)
-		.rotate([-10,0,0])
-	    .geofile('/static/geojson/countries.json')
-	    .colors(colorbrewer.YlOrRd[9])
-	    .column('total')
-	    .format(d3.format(',.02f'))
-	    .legend(true)
-	    .unitId('countryCode');
-
-	queryWFPbyIngredient('wheat', function(data){
-		d3.select('#canvas-svg')
-			.datum(data)
-			.call(map.draw, map);
-	});
+	var map = initMap();
 
    	// Search imput for recipes
     $(".recipe-search").keypress(function (e) {
@@ -99,7 +84,7 @@ $(document).ready(function() {
                             
                             // Update map
                             //createMap(ingredient);
-                            updateWFPMap(ingredient, d3.select('#canvas-svg').datum(), function(){
+                            updateWFPMap(ingredient, function(){
 								map.column('total').update();
 							});
                         });
@@ -145,7 +130,7 @@ $(document).ready(function() {
             queryGwfAndUpdateBarChart(ingredient);
             
             // Update map
-            updateWFPMap(ingredient, d3.select('#canvas-svg').datum(), function(){
+            updateWFPMap(ingredient, function(){
 				map.column('total').update();
 			});
         } );

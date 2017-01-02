@@ -337,7 +337,9 @@ var Geomap = (function () {
                 return d.properties.name;
             },
             width: null,
-            zoomFactor: 4
+            zoomFactor: 4,
+			mouseMoveMethod: function(d){  },
+			mouseOutMethod: function(d){  }
         };
 
         // Setup methods to access properties.
@@ -408,7 +410,11 @@ var Geomap = (function () {
                 self.geo = geo;
                 self.svg.append('g').attr('class', 'units zoom').selectAll('path').data(topojson.feature(geo, geo.objects[self.properties.units]).features).enter().append('path').attr('class', function (d) {
                     return 'unit ' + self.properties.unitPrefix + d.id;
-                }).attr('d', self.path).on('click', self.clicked.bind(self)).append('title').text(self.properties.unitTitle);
+                }).attr('d', self.path).on('click', self.clicked.bind(self))
+				.on('click', self.clicked.bind(self))
+				.on('mousemove',function(d){ self.properties.mouseMoveMethod(d, d3.mouse(this)); })
+				.on('mouseout',function(d){ self.properties.mouseOutMethod(d); })
+				.append('title').text(self.properties.unitTitle);
                 self.update();
             });
         }
