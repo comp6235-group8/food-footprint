@@ -29,3 +29,7 @@
 .ingredients-by-recipe {
     display: none;
 }
+
+.search-box {
+    margin: 20px;
+}

@@ -196,8 +196,8 @@ var mouseOutMethod = function(d){
 
 
 var initMap = function (){
-	var width = 945;
-	var height = 492;
+	var width = 950;
+	var height = 500;
 
 	var map = d3.geomap.choropleth()
 		.width(width)
