@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Water foodprint per dish/ingredient</title>
+<title>Water Footprint per Dish/Ingredient</title>
 <meta name='viewport'
 	content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -63,7 +63,7 @@ svg {
   <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
           <div class="navbar-header">
-              <a class="navbar-brand" href="./">Water footprint by Recipe and Ingredient</a>
+              <a class="navbar-brand" href="./">Water Footprint by Recipe and Ingredient</a>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -75,63 +75,73 @@ svg {
         </div>
       </div>
   </div>
-   <div class="row">
-    <div class="row">
-    	<div class="col-sm-3 collapse in" id="WFP_tables">
-    		<!-- Search input -->
-    		<div class="input-group">
-                <input type="text" class="form-control recipe-search" placeholder="Search for recipes...">
-                <span class="input-group-btn">
+  <div>
+      <div class="row">
+          <!-- Search input -->
+          <div class="input-group col-sm-4 col-sm-offset-4">
+              <input type="text" class="form-control recipe-search" placeholder="Search for recipes...">
+              <span class="input-group-btn">
                     <button class="btn btn-default" type="button" disabled>Go!</button>
                 </span>
-            </div>
-            <!-- Recipes -->
-			<div class="chart-wrapper">
-				<div class="chart-title">Recipies</div>
-				<div class="chart-stage">
-					<table id="recipe_table" class="display"></table>
-				</div>
-				<div class="chart-notes">You can choose a dish and find out
-					how much water footprint his ingredients cause.</div>
-			</div>
-			<!-- Ingredients #1-->
-			<div class="chart-wrapper total-ingredients">
-				<div class="chart-title">Ingredients / products</div>
-				<div class="chart-stage">
-					<table id="ingredient_table" class="display"></table>
-				</div>
-				<div class="chart-notes">You can choose an ingredient or product to view its corresponding water foodprint.</div>
-			</div>
-
-			<!-- Ingredients #2-->
-			<div class="chart-wrapper ingredients-by-recipe" >
-				<div class="chart-title">Ingredients / products</div>
-				<div class="chart-stage">
-					<table id="ingredient_table_by_recipe" class="display"></table>
-				</div>
-				<div class="chart-notes">You can choose an ingredient or product to view its corresponding water foodprint.</div>
-			</div>
-    	</div>
+          </div>
+      </div>
+      <div class="row search-box">
+          <div class="col-sm-10 col-sm-offset-1">
+              <div class="row">
+                  <div class="col-sm-4 collapse in" id="WFP_tables">
+                      <!-- Recipes -->
+                      <div class="chart-wrapper">
+                          <div class="chart-title">Recipes</div>
+                          <div class="chart-stage">
+                              <table id="recipe_table" class="display"></table>
+                          </div>
+                          <div class="chart-notes">You can choose a dish and find out
+                              how much water footprint his ingredients cause.</div>
+                      </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <!-- Ingredients #1-->
+                      <div class="chart-wrapper total-ingredients">
+                          <div class="chart-title">Ingredients / products</div>
+                          <div class="chart-stage">
+                              <table id="ingredient_table" class="display"></table>
+                          </div>
+                          <div class="chart-notes">You can choose an ingredient or product to view its corresponding water footprint.</div>
+                      </div>
+                      <!-- Ingredients #2-->
+                      <div class="chart-wrapper ingredients-by-recipe" >
+                          <div class="chart-title">Ingredients / products</div>
+                          <div class="chart-stage">
+                              <table id="ingredient_table_by_recipe" class="display"></table>
+                          </div>
+                          <div class="chart-notes">You can choose an ingredient or product to view its corresponding water footprint.</div>
+                      </div>
+                  </div>
+                  <!-- Barchart -->
+                  <div class="col-sm-4">
+                      <div class="chart-wrapper collapse in" id="WFP_barchart">
+                          <div class="chart-title bar-title">Water footprint</div>
+                          <div class="chart-stage">
+                              <svg id="wfp_barchart_svg"></svg>
+                          </div>
+                          <div class="chart-notes">Sum of the water footprint of all the products</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="row">
       <!-- Map -->
-    	<div class="col-sm-7">
-        <div class="chart-wrapper">
-          <div class="chart-title bar-title">Water footprint per country in m<sup>3</sup></div> 
-  				<div id="tooltip-container"></div> 
-          <div id="map"></div>
-          <div class="chart-notes">Sum of the water footprint of all the products</div>
-			  </div>
-    	</div>
-    	<!-- Barchart -->
-      <div class="col-sm-2">
-    		<div class="chart-wrapper collapse in" id="WFP_barchart">
-            <div class="chart-title bar-title">Water footprint</div>
-            <div class="chart-stage">
-              <svg id="wfp_barchart_svg"></svg>
-            </div>
-            <div class="chart-notes">Sum of the water footprint of all the products</div>
-        </div>
-    	</div>
-    </div>
+      <div class="col-sm-10 col-sm-offset-1">
+          <div class="chart-wrapper">
+              <div class="chart-title bar-title">Water footprint per country in m<sup>3</sup></div>
+              <div id="tooltip-container"></div>
+              <div id="map"></div>
+              <div class="chart-notes">Sum of the water footprint of all the products</div>
+          </div>
+      </div>
+  </div>
 
 
 <hr style="height:1px;border:none;border-top:1px dashed #0066CC;" id="Top10recipes"/>
@@ -174,7 +184,5 @@ svg {
             <svg width="450" height="560" id="bad_crop"></svg>
         </div>
     </div>
-</div>
-
 </body>
 </html>
