@@ -33,3 +33,8 @@
 .search-box {
     margin: 20px;
 }
+
+svg {
+  display: block;
+  margin: auto;
+}

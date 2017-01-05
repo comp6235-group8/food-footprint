@@ -220,15 +220,13 @@ def data_globalwaterfootprintbycountry():
         ])
 
     print aggregation['result'];
-
+    
     water_footprint = []
     if aggregation['ok'] == 1:
         water_footprint = aggregation['result']
 
-    return json.dumps(water_footprint)
-
-
     connection.close()
+    return json.dumps(water_footprint)
 
 # Gets the average water footprints for a recipe
 @app.route("/data/recipe/waterfootprint/<ingredients>")
