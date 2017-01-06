@@ -4,7 +4,7 @@ from pymongo import MongoClient
 def update():
     connection = MongoClient(app.MONGODB_HOST, app.MONGODB_PORT)
     collection = connection[app.DBS_NAME][app.COLLECTION_RECIPES]
-    for i in collection.find({}).skip(273360):
+    for i in collection.find({}):
         print(i['recipeName'])
         ingredients = i['ingredients']
         delimiter = ','
