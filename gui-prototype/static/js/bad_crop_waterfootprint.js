@@ -8,10 +8,9 @@ function bad_crop() {
         width = +svg.attr("width") - margin.left - margin.right,
         height = +svg.attr("height")- margin.top - margin.bottom,
         g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    //console.log("ssssssssssssss");
 
     var x0 = d3.scale.ordinal()
-        .rangeRoundBands([0, width], .1);
+        .rangeRoundBands([0, width], .3);
 
     var x1 = d3.scale.ordinal();
 
@@ -65,7 +64,7 @@ function bad_crop() {
             .attr("dx", "-1em")
             .attr("dy", ".20em")
             .style("text-anchor", "end")
-            .style("font-size", "10px")
+            .style("font-size", "11px")
             .style("font-weight", "bold");
 
         svg.append("g")
@@ -77,7 +76,7 @@ function bad_crop() {
             .attr("y", 6)
             .attr("dy", ".71em")
             .style("text-anchor", "end")
-            .text("Waterfootprint");
+            .text("Waterfootprint(m3)");
 
         var state = svg.selectAll(".state")
             .data(data)
@@ -135,13 +134,13 @@ function bad_crop() {
             });
 
         legend.append("rect")
-            .attr("x", width - 18)
+            .attr("x", width+18)
             .attr("width", 18)
             .attr("height", 18)
             .style("fill", color);
 
         legend.append("text")
-            .attr("x", width - 24)
+            .attr("x", width+8)
             .attr("y", 9)
             .attr("dy", ".35em")
             .style("text-anchor", "end")
