@@ -4,11 +4,11 @@
 1. Make sure you have python 2.7 installed
 2. `pip install -r requirements.txt`
 3. Make sure you have a local MongoDB installed
-4. Import collections manually/run python scripts to load collections into MongoDB
+4. Import collections manually/run python scripts to load collections into MongoDB.
    To import the collections manually:
-    1. Download the files (through the browser) from https://mega.nz/#!8lFSEJzQ!O_VO7tkOZSf_LZPI6tEsxZ3LhqvrseNjAyH0-gR130U
-    2. Start the local mongodb on default port: `mongod`
-    3. Create collections (given that the files are in the same directory)
+    * Download the files (through the browser) from https://mega.nz/#!8lFSEJzQ!O_VO7tkOZSf_LZPI6tEsxZ3LhqvrseNjAyH0-gR130U
+    * Start the local mongodb on default port: `mongod`
+    * Create collections (given that the files are in the same directory)
     * `mongoimport -d water_footprint -c animal_products --file animal_products.json`
     * `mongoimport -d water_footprint -c crop_products --file crop_products.json`
     * `mongoimport -d water_footprint -c crop_products_aggregated_by_category --file crop_products_aggregated_by_category.json`
