@@ -1,5 +1,5 @@
  d3.json("http://0.0.0.0:5000/data/recipes/popular_waterfootprint",function(error,data) {
-        var str="<tr><th>rank<span class='glyphicon glyphicon-heart'></span></th><th align='center'>recipe name</th><th align='center'>water footprint</th></tr>";
+        var str="<tr><th>rank<span class='glyphicon glyphicon-heart'></span></th><th align='center'>recipe name</th><th align='center'>water footprint(m3)</th></tr>";
            for(var i=0;i<data.length;i++)
             {
                 var blue=data[i]["water_footprint"]["blue"].toFixed(2);
