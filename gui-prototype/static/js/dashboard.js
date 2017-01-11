@@ -84,7 +84,7 @@ $(document).ready(function() {
                             
                             // Update map
                             //createMap(ingredient);
-                            updateWFPMap(ingredient, function(){
+                            updateWFPMap(ingredient,null,function(){
 								map.column('total').update();
 							});
                         });
@@ -95,6 +95,10 @@ $(document).ready(function() {
                             $(".chart-title.bar-title").text("Average Water Footprint for all ingredients in " + recipeName);
                         });
 
+                    });
+
+                    updateWFPMap(null,recipeName,function(){
+                        map.column('total').update();
                     });
                 });
             });

@@ -1,5 +1,7 @@
 from flask import Flask
 from flask import render_template
+import logging
+from logging.handlers import RotatingFileHandler
 from pymongo import MongoClient
 from bson import json_util
 from bson.json_util import dumps
@@ -11,14 +13,10 @@ app = Flask(__name__)
 MONGODB_HOST = 'localhost'
 MONGODB_PORT = 27017
 DBS_NAME = 'water_footprint'
-#COLLECTION_RECIPIES = 'recipies'
-#COLLECTION_CROP = 'crop_products'
 COLLECTION_CROP_AGGREGATED = 'crop_products_aggregated_by_category'
-#COLLECTION_RECIPES = 'recipies'
 COLLECTION_RECIPES = 'recipes_2'
 COLLECTION_CROP = 'crop_products_by_category'
 COLLECTION_INGREDIENT_TO_WATERFP = 'ingredient_to_waterfootprint'
-#FIELDS = {'school_state': True, 'resource_type': True, 'poverty_level': True, 'date_posted': True, 'total_donations': True, '_id': False}
 
 
 @app.route("/")
@@ -187,12 +185,12 @@ def data_globalwaterfootprint():
 
     water_footprint = {}
     if aggregation['ok'] == 1:
-        water_footprint['blue'] = aggregation['result'][0]['totalBlue']
-        water_footprint['green'] = aggregation['result'][0]['totalGreen']
-        water_footprint['grey'] = aggregation['result'][0]['totalGrey']
-        #water_footprint['blue'] = aggregation['result'][0]['avgBlue']
-        #water_footprint['green'] = aggregation['result'][0]['avgGreen']
-        #water_footprint['grey'] = aggregation['result'][0]['avgGrey']
+        #water_footprint['blue'] = aggregation['result'][0]['totalBlue']
+        #water_footprint['green'] = aggregation['result'][0]['totalGreen']
+        #water_footprint['grey'] = aggregation['result'][0]['totalGrey']
+        water_footprint['blue'] = aggregation['result'][0]['avgBlue']
+        water_footprint['green'] = aggregation['result'][0]['avgGreen']
+        water_footprint['grey'] = aggregation['result'][0]['avgGrey']
 
     connection.close()
     return json.dumps(water_footprint)
@@ -252,6 +250,52 @@ def recipe_waterfootprint(ingredients):
 
     return json.dumps(list_of_footprints(water_footprints))
 
+# Gets the average water footprints for a recipe PER COUNTRY
+@app.route("/data/recipe/waterfootprintpercountry/<recipe>")
+def recipe_waterfootprint_per_country(recipe):
+    connection = MongoClient(MONGODB_HOST, MONGODB_PORT)
+    mapper = connection[DBS_NAME][COLLECTION_INGREDIENT_TO_WATERFP]
+    collection = connection[DBS_NAME][COLLECTION_CROP_AGGREGATED]
+
+    originalIngredients = json.loads(data_ingredients_per_recipe(recipe))
+
+    products = []
+    for oi in originalIngredients:
+        ing_wf = mapper.find_one({"ingredient":oi})
+        if ing_wf:
+            products.append({'product_category':ing_wf['product_category'],
+                             'product':ing_wf['product']})
+    app.logger.debug(products)
+
+    productsFilter = []
+    for p in products:
+        productsFilter.append(p['product_category'])
+    app.logger.debug(productsFilter)
+
+    aggregation = collection.aggregate([
+        { '$match' : { 'product' : {'$in' : productsFilter} } },
+        { '$project' : { 'product' : '$product', 'countries' : '$countries', '_id' : 0}},    
+        { '$unwind' : "$countries" },
+        { '$group': { '_id': '$countries.country', 
+            'blue': { '$avg': '$countries.wf_country_average.blue' }, 
+            'green': { '$avg': '$countries.wf_country_average.green' }, 
+            'grey': { '$avg': '$countries.wf_country_average.grey' } } 
+        },
+        { '$project' : { 'country':'$_id', 
+            'water_footprint_country_average.blue':'$blue',
+            'water_footprint_country_average.green':'$green',
+            'water_footprint_country_average.grey':'$grey', 
+            "_id":0}},
+        { '$sort' : { 'country' : 1 } }
+        ])
+
+    water_footprint = []
+    if aggregation['ok'] == 1:
+        water_footprint = aggregation['result']
+
+    connection.close()
+    return json.dumps(water_footprint)
+
 # Return the waterfootprint of top 10 ingredients
 @app.route("/data/top_ingredients/waterfootprint/<ingredients>")
 def ingredient_waterfootprint(ingredients):
@@ -300,4 +344,7 @@ def recipes_popularwaterfootprint():
     return json.dumps(water_footprint_all)
 
 if __name__ == "__main__":
+    handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1)
+    handler.setLevel(logging.DEBUG)
+    app.logger.addHandler(handler)
     app.run(host='0.0.0.0',port=5000,debug=True)

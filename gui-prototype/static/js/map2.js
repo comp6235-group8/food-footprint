@@ -55,11 +55,17 @@ var findUpdatedCountry = function(data, countryCode){
 	return null;
 }
 
-var updateWFPMap = function(ingredient, cb) {
+var updateWFPMap = function(ingredient, recipe, cb) {
 	data = d3.select('#map').datum();
 
-	d3.json('http://localhost:5000/data/ingredient/waterfootprint/'+ingredient, function(error, newData) {
-	  if (!newData || !newData.countries){ 
+	var request = '/data/ingredient/waterfootprint/'+ingredient;
+	if(recipe){
+		request = '/data/recipe/waterfootprintpercountry/'+recipe;
+	}  
+
+	d3.json(request, function(error, newData) {
+	  //console.log( newData.slice(0,10));
+	  if ( !((newData && newData.countries) ||  (typeof newData !== 'undefined' && newData.length > 0))) {
 		// NO DATA
 	  	console.log("No data returned for ingredient: " + ingredient);
 
@@ -71,7 +77,9 @@ var updateWFPMap = function(ingredient, cb) {
 		}); 
 	  }else{
 		  // DATA
-		  newData = newData.countries;
+		  if (newData.countries){
+		  	newData = newData.countries;
+		  }
 		  preprocessCountryData(newData);
 
 		  data.forEach(function(country, index){

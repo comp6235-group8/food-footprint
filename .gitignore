@@ -105,7 +105,11 @@ ENV/
 .settings
 
 # DATA FOLDER
+data/*
 data/*.json
 data/*.xlsx
 frontend/.idea/
 frontend/node_modules/
+
+#Log files
+gui-prototype/app.log*
