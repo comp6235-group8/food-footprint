@@ -18,7 +18,7 @@ function gwfBasics() {
     left: 50
   },
   width = 270 - margin.left - margin.right,
-  height = 315 - margin.top - margin.bottom,
+  height = 311 - margin.top - margin.bottom,
   colorBar = d3.scale.category20(),
   barPadding = 1;
   return {

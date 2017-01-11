@@ -34,10 +34,9 @@
 <script src='./static/js/map2.js' type='text/javascript'></script>
 <script src='./static/js/dashboard.js' type='text/javascript'></script>
 
-    <script src="../static/js/stacked_bar_chart.js"></script>
-    <script src="../static/js/good_crop_waterfootprint.js"></script>
-    <script src="../static/js/bad_crop_waterfootprint.js"></script>
-
+<script src="../static/js/stacked_bar_chart.js"></script>
+<script src="../static/js/good_crop_waterfootprint.js"></script>
+<script src="../static/js/bad_crop_waterfootprint.js"></script>
 
 <style>
 svg {
@@ -106,7 +105,7 @@ svg {
                           <div class="chart-stage">
                               <table id="ingredient_table" class="display"></table>
                           </div>
-                          <div class="chart-notes">You can choose an ingredient or product to view its corresponding water footprint.</div>
+                          <div class="chart-notes">You can choose an ingredient to view its corresponding water footprint.</div>
                       </div>
                       <!-- Ingredients #2-->
                       <div class="chart-wrapper ingredients-by-recipe" >
@@ -114,7 +113,7 @@ svg {
                           <div class="chart-stage">
                               <table id="ingredient_table_by_recipe" class="display"></table>
                           </div>
-                          <div class="chart-notes">You can choose an ingredient or product to view its corresponding water footprint.</div>
+                          <div class="chart-notes">You can choose an ingredient to view its corresponding water footprint.</div>
                       </div>
                   </div>
                   <!-- Barchart -->
@@ -124,7 +123,7 @@ svg {
                           <div class="chart-stage">
                               <svg id="wfp_barchart_svg"></svg>
                           </div>
-                          <div class="chart-notes">Sum of the water footprint of all the products</div>
+                          <div class="chart-notes">Average water footprint of all the ingredients.</div>
                       </div>
                   </div>
               </div>
@@ -138,7 +137,7 @@ svg {
               <div class="chart-title bar-title">Water footprint per country in m<sup>3</sup></div>
               <div id="tooltip-container"></div>
               <div id="map"></div>
-              <div class="chart-notes">Sum of the water footprint of all the products</div>
+              <div class="chart-notes">Average water footprint of all the ingredients per country.</div>
           </div>
       </div>
   </div>

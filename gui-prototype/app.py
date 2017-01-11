@@ -205,9 +205,9 @@ def data_globalwaterfootprintbycountry():
         { '$project' : { 'product' : '$product', 'countries' : '$countries', '_id' : 0}},    
         { '$unwind' : "$countries" },
         { '$group': { '_id': '$countries.country', 
-            'blue': { '$sum': '$countries.wf_country_average.blue' }, 
-            'green': { '$sum': '$countries.wf_country_average.green' }, 
-            'grey': { '$sum': '$countries.wf_country_average.grey' } } 
+            'blue': { '$avg': '$countries.wf_country_average.blue' }, 
+            'green': { '$avg': '$countries.wf_country_average.green' }, 
+            'grey': { '$avg': '$countries.wf_country_average.grey' } } 
         },
         { '$project' : { 'country':'$_id', 
             'water_footprint_country_average.blue':'$blue',

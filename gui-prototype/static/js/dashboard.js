@@ -134,7 +134,7 @@ $(document).ready(function() {
             queryGwfAndUpdateBarChart(ingredient);
             
             // Update map
-            updateWFPMap(ingredient, function(){
+            updateWFPMap(ingredient,null,function(){
 				map.column('total').update();
 			});
         } );
